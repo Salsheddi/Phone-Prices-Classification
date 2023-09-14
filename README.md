@@ -1,5 +1,5 @@
 # data-mining-G3
-phone prices analysis
+Phone prices analysis
 
 Shdan Alsheddi - Juri Alsolaimi - Shaden Albader- Joud Alhussain
 
