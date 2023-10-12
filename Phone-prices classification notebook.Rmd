@@ -1,0 +1,685 @@
+---
+title: "predict phone price |data mining project G3"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+  pdf_document: default
+---
+## 1.Problem
+Mobile devices have significantly changed how individuals work, socialize, plan, and entertain themselves. There are numerous companies that provide us with phones with varied features; as part of our project, we will compare the prices of phones from different companies depending on features like brand, operating system, storage, and others. We were interested in this dataset because we want to build a classification model that helps people choose the right phone for them taking into consideration the features compared to the price.
+
+
+
+
+
+## 2.Data mining task
+The objective of this dataset is to use data mining techniques such as classification and clustering to develop a predictive model. This model will categorize and estimate the price range of popular phone brands based on their distinctive features. Specifically, the aim is to classify phones into categories such as "expensive," "affordable," or "cheap," based on the phone's price, and clustering while taking into account their ongoing manufacturing and the wealth of information contained in the dataset.
+
+## 3.Data
+
+### -Dataset Source :
+We took the dataset from kaggle, an online platfrom for data science competitons and collaboration, offering datasets, computing resources and a community of data scientists
+
+Dataset URL : https://www.kaggle.com/datasets/berkayeserr/phone-prices
+
+### -main characteristics of attributes :
+The dataset consists of 22 columns(attributes) and 1512 rows
+
+
+| Attributes name | Describtion | Data type | possible values |
+|-----------------|-------------|-----------|-----------------|
+|phone_name       |name of the phone|character|1496 possible unique values|
+|brand            |brand of the phone|character|Xiaomi Oppo Samsung Vivo Realme|
+|os               |operating system of the phone|character|Android 11 Android 10 Android 12 Android 9.0 Android 13|
+|inches           |size of the phone screen |numeric |3.5 - 10.5  |
+|resoultion       |resoultion of the phone screen width x height|character           |1080x2400 720x1600 1080x2340 1080x2408 720x1520         |
+|battery          |battery capacity of the phone|numeric|1500 - 7500| 
+|battery_type     |battery type of the phone|character| Li-Po Li-Ion |
+|ram(GB)          |ram of the phone as gigabyte|numeric |0 -24                 |
+|announcement_date |the date of the announcement of the phone             |character           |1 sep 2016 - 31 Aug 23 |
+|weight(g)         |weight of the phone in grams |numeric           |100-500                 |
+|storage(GB)      |storage capacity of the phone as GB             |numeric           |0-550                 |
+|video_720p       |does phone camera has 720p feature|boolean|TRUE , FALSE                 |
+|video_1080p      |does phone camera has 1080p feature       |logical           |TRUE , FALSE                 |
+|video_4K         |does phone camera has 4K feature             |logical           |TRUE , FALSE                 |
+|video_8K         |does phone camera has 8K feature|logical           |TRUE , FALSE                |
+|video_30fps       |does phone camera has 30fps feature             |logical           |TRUE , FLASE                 |
+|video_120fps       |does phone camera has 120fps feature             |logical           |TRUE , FALSE                 |
+|video_240fps       |does phone camera has 240fps feature             |logical           |TRUE , FALSE                 |
+|video_480fps|does phone camera has 480fps feature|logical|TRUE , FALSE|
+|video_960fps|does phone camera has 960fps feature|logical|TRUE , FALSE|
+|price(USD| price of the phone as USD|numeric |0 - 2400|
+
+## -Data loading
+
+```{r}
+
+dataset_phones=read.csv("cleaned_all_phones.csv",header=TRUE,sep=',') 
+```
+## -libraries and packages loading
+```{r}
+install.packages("ggplot2") 
+library(ggplot2)
+installed.packages("dplyr")
+library(dplyr)
+```
+
+
+
+## -Data Exploration and Summary using R
+
+### -number of objects
+```{r}
+nrow(dataset_phones)
+
+```
+
+
+### -number of attributes
+```{r}
+ncol(dataset_phones)
+```
+
+### sample of first 10 rows
+```{r}
+head(dataset_phones,10)
+```
+### sample of last 10 rows
+```{r}
+tail(dataset_phones,10)
+```
+
+
+
+
+### -structure of the dataset
+```{r}
+str(dataset_phones)
+```
+The dataset contains 1512 rows (observations) and 22 columns (variables or attributes),each row represents a different phone, and each column represents a specific attribute or characteristic of the phone.The dataset includes a mix of different data types:
+Character data types (e.g., phone_name, brand, os, resolution, battery_type).
+Numeric data types (e.g., inches, battery, ram(GB), weight(g), storage(GB), price(USD)).
+Logical data types (e.g., video_720p, video_1080p, video_4K, ...).
+
+The data types used for each attribute are generally appropriate based on the nature of the data. for example, character data types are used for textual or categorical information like phone names and brands, while numeric data types are used for measurements such as battery capacity and price .the dataset have been loaded correctly with the appropriate data types assigned to each attribute 
+
+### -checking for missing values
+
+```{r}
+dim(dataset_phones)
+dataset_phones=na.omit(dataset_phones)
+dim(dataset_phones)
+sum(is.na(dataset_phones))
+
+```
+We checked for missing values and there were no tuples that had a no recorded value (nulls or NA (none answer)) for all attributes which indicates that all tuples have a recorded value, meaning we do not need to do any processing to clean the data from missing values.
+
+### -checking for duplication
+```{r}
+num_duplicates <- sum(duplicated(dataset_phones))
+cat("Number of duplicate rows:", num_duplicates, "\n")
+```
+there's no duplicate tuples that requires data cleaning
+
+### -statistical measures
+
+```{r}
+summary(dataset_phones)
+```
+After doing the summary we can predict the distribution of the data 
+for each column by comparing the mean and the median .
+in  inches,battery  columns we can see that both of them are symmetric because Q1,Q2,Q3 are approximately equal
+ram.GB.,weight.g.,storage.GB.,price.USD. columns we can see that all of them right-skewed because Q2 is closer to Q3
+
+
+also we can get  the range for every column by seeing the Max value and the min value .
+for the inches column the we can describe the range as the following (3.800 to 10.400)
+for battery column the range as the following (1821 to 7250 )
+for ram.GB. column the range as the following (1.000 to 24.000) which is the Biggest Range from all column
+for weight.g. column the range as the following (130.0 to 500.0)
+for storage.GB. column the range as the following (1.0 to 512.0 )
+for price.USD. column the range as the following (40.0 to 2300.0)
+
+
+## Central Tendency
+### Mean
+```{r}
+mean(dataset_phones$inches)
+mean(dataset_phones$battery)
+mean(dataset_phones$ram.GB.)
+mean(dataset_phones$weight.g.)
+mean(dataset_phones$storage.GB.)
+mean(dataset_phones$price.USD.)
+
+```
+the mean represents the central value of the Data Set ,indicating  the average of all of the number,the mean is sensitive to extreme value. 
+This single value for the mean is much easier to interpret compared to staring at all of the rows of raw data we can see that battery column has the highest mean which is (4389.799) on the other hand we can see that the inches column has the lowest mean which is (6.42246) which is slightly close to ram.GB. column (6.683862)
+
+
+### Median 
+```{r}
+median(dataset_phones$inches)
+median(dataset_phones$battery)
+median(dataset_phones$ram.GB.)
+median(dataset_phones$weight.g.)
+median(dataset_phones$storage.GB.)
+median(dataset_phones$price.USD.)
+```
+The median is a measure of central tendency that represents the middle value of a Data set It provides a measure of central tendency that is not affected by extreme values as much as the mean.
+The median is an important to calculate because it gives us an idea of where the center of a data set is located for each column  we can see that the center for battery column is (4500) which is the biggest median of all column  on the other hand inches column is (6.5)which is the smallest median.
+
+### Mode
+```{r}
+
+variables <- c(
+  "phone_name", "brand", "os", "inches", "resolution", "battery",
+  "battery_type", "ram.GB.", "announcement_date", "weight.g.",
+  "storage.GB.", "video_720p", "video_1080p", "video_4K",
+  "video_8K", "video_30fps", "video_60fps", "video_120fps",
+  "video_240fps", "video_480fps", "video_960fps", "price.USD."
+)
+
+
+find_mode <- function(x) {
+  tab <- table(x)
+  names(tab)[tab == max(tab)]
+}
+
+
+for (variable in variables) {
+  cat("Variable:", variable, "\n")
+  cat("Mode(s):", find_mode(y[[variable]]), "\n\n")
+}
+
+```
+The mode is the value that occurs with the highest frequency in a dataset. It represents the most common observation or category.
+for our data set all the column have one mode which mean it is unimodal.
+
+### Midrange
+```{r}
+z<-c(dataset_phones)
+max(z$inches)+ min(z$inches)/2
+max(z$battery)+ min(z$battery)/2
+max(z$ram.GB.)+ min(z$ram.GB.)/2
+max(z$weight.g.)+ min(z$weight.g.)/2
+max(z$storage.GB.)+ min(z$storage.GB.)/2
+max(z$price.USD.)+ min(z$price.USD.)/2
+```
+The midrange is a simple statistical measure that provides a rough estimate of the center of a data set it provides a simple measure that summarizes the spread of data by considering the range.
+when we look at the data we can see that battery column has the highest midrange which is(8160.5)on the other hand inches column has the smallest midrange which is(12.3)
+### Variance
+```{r}
+var(dataset_phones$inches)
+var(dataset_phones$battery)
+var(dataset_phones$ram.GB.)
+var(dataset_phones$weight.g.)
+var(dataset_phones$storage.GB.)
+var(dataset_phones$price.USD.)
+```
+Variance is a statistical measure used to quantify the spread or dispersion of a set of data points.
+The variance is always a non-negative value. A small variance like the variance for inches column (0.2275701)indicates that the data points are closely clustered around the mean, while a large variance like the variance for battery column suggests that the data points are spread out over a wider range.
+
+
+### Standard Deviation
+```{r}
+sd(dataset_phones$inches)
+sd(dataset_phones$battery)
+sd(dataset_phones$ram.GB.)
+sd(dataset_phones$weight.g.)
+sd(dataset_phones$storage.GB.)
+sd(dataset_phones$price.USD.)
+
+```
+The standard deviation is a statistical measure that quantifies the dispersion or variability of a set of data points. It is closely related to the variance but provides a measure of dispersion that is in the same unit as the original data.
+A small standard deviation like the standard deviation for inches column(0.4770431) suggests that the data points are closely clustered around the mean,which indicating less variability.On the other hand a large standard deviation like the standard deviation for battery column (784.607)indicates that the data points are spread out over a wider range,which indicating greater variability.
+
+## Dispersion of data
+### Range 
+```{r}
+range(dataset_phones$inches)
+range(dataset_phones$battery)
+range(dataset_phones$ram.GB.)
+range(dataset_phones$weight.g.)
+range(dataset_phones$storage.GB.)
+range(dataset_phones$price.USD.)
+```
+The range is a simple statistical measure that represents the difference between the highest and lowest values in a data set. It provides a basic understanding of the spread or variability of the data.
+A larger range like the range for the inches column( 3.8 to 10.4) indicates a wider spread and greater variability, while a smaller range like the range for the battery column(1821 to 7250) suggests a narrower spread and less variability.
+
+### Quartiles
+```{r}
+quantile(dataset_phones$inches,c(0.25,0.50,0.75))
+quantile(dataset_phones$battery,c(0.25,0.50,0.75))
+quantile(dataset_phones$ram.GB.,c(0.25,0.50,0.75))
+quantile(dataset_phones$weight.g.,c(0.25,0.50,0.75))
+quantile(dataset_phones$storage.GB.,c(0.25,0.50,0.75))
+quantile(dataset_phones$price.USD.,c(0.25,0.50,0.75))
+```
+The three Quartiles are denoted as Q1 is found by finding the median of the values between the minimum and the median, Q2 simply referred to as the median, and Q3 is found by finding the median of the values between
+the median and the maximum.
+
+
+
+### Interquartile Range
+```{r}
+IQR(dataset_phones$inches)
+IQR(dataset_phones$battery)
+IQR(dataset_phones$ram.GB.)
+IQR(dataset_phones$weight.g.)
+IQR(dataset_phones$storage.GB.)
+IQR(dataset_phones$price.USD.)
+```
+Interquartile Range It measures the spread of the middle 50% of the data and is useful for identifying outliers.
+Outliers are data points that fall below Q1 - 1.5 * IQR or above Q3 + 1.5 * IQR. By comparing individual data points to the quartiles and the IQR, you can identify values that lie significantly outside the expected range.
+
+for the inches column the max_outlier>7.22 and the min_outlier< 5.74
+for the battery column the max_outlier>6500 and the min_outlier< 2500
+for the ram.GB. column the max_outlier>14 and the min_outlier<-2 
+for the weight.g. column the max_outlier>230.62 and the min_outlier<141.62
+for the storage.GB. column the max_outlier>224 and the min_outlier<-32
+for the price.USD. column the max_outlier>730.0037 and the min_outlier<-150.0062
+
+
+## Data visualization
+
+### Box plots and outliers detecting
+
+
+```{r}
+boxplot(dataset_phones$storage.GB. , data = dataset_phones, xlab = "Storage(GB)", ylab = "Frequency")
+```
+
+
+
+```{r}
+boxplot.stats(dataset_phones$storage.GB)$out
+```
+The storage(GB) boxplot and statistical result illustrates that the range of the storage values are high (1GB - 512GB)  and there’s outliers detected by boxplot which are the values (256 GB and 512 GB) ,going back to the data these high storage values are not rare we cant consider them real outliers that need to be removed,but a minimum storage capacity observed is 1.0 GB considered to be an outlier and it will be preprocessed.
+
+```{r}
+boxplot(dataset_phones$battery , data = dataset_phones, xlab = "battery", ylab = "Frequancy")
+```
+```{r}
+boxplot.stats(dataset_phones$battery)$out
+```
+The battery boxplot and statistical result illustrates that majority of the phone batteries in the dataset are high in range there’s a lot of outliers detected, they are estimated based on  boxplot and will be preprocessed.
+
+```{r}
+boxplot(dataset_phones$price.USD. , data = dataset_phones, xlab = "price(USD)", ylab = "Frequancy")
+```
+
+
+```{r}
+boxplot.stats(dataset_phones$price.USD.)$out
+
+```
+
+The price(USD) boxplot and statistical result illustrates there’s outliers detected way higher than the maximum phone price in the dataset that will be removed in preprocessing. 
+
+```{r}
+boxplot(dataset_phones$ram.GB. , data = dataset_phones, xlab = "ram(GB)", ylab = "Frequancy")
+```
+```{r}
+boxplot.stats(dataset_phones$ram.GB.)$out
+
+```
+
+The ram(GB) boxplot and statistical result illustrate that these outliers need to be smoothed for accurate results.
+```{r}
+boxplot(dataset_phones$weight.g. , data = dataset_phones, xlab = "Weight(G)", ylab = "Frequancy")
+```
+```{r}
+boxplot.stats(dataset_phones$weight.g.)$out
+```
+The weight(G) boxplot and statistical result illustrate that the weight of phones is  close in values ranged between (130.0 g and 500.0 g) and there is outliers that need to be preprocessed for accurate results 
+```{r}
+boxplot(dataset_phones$inches , data = dataset_phones, xlab = "inches)", ylab = "Frequancy")
+```
+```{r}
+boxplot.stats(dataset_phones$inches)$out
+
+```
+The inches box plot and statistical result illustrate that the inches of phones ranged between(3.800 and 10.400) and processing is required for outliers.
+
+
+
+```{r}
+hist(dataset_phones$weight.g.)
+
+
+```
+The weight(g) histogram graph indicates an asymmetric right-skewed distribution of phone weights, with the majority of phone weights falling between (150g and 200g) and outliers that require preprocessing for dependable results.
+
+```{r}
+hist(dataset_phones$price.USD.)
+
+```
+
+The price(USD) histogram graph demonstrates a right-skewed distribution most phones less than $500.
+
+```{r}
+hist(dataset_phones$battery)
+
+```
+
+The histogram illustrates that the distribution of phone batteries is generally symmetrical and that it falls within a normal range, which is between 2000 and 7000, with outliers that need to be smoothed out.
+```{r}
+hist(dataset_phones$storage.GB.)
+```
+The histogram illustrates that theres a variation in storage values ,and it also shows it has outliers that needs to be smoothed out.
+
+```{r}
+library(readr)
+library(ggplot2)
+ggplot(dataset_phones, aes(x =dataset_phones$battery_type , y = dataset_phones$price.USD.)) + 
+  geom_bar(stat = "identity")
+```
+the battery type and price(USD) bar plot illustrates that the majority of phone batteries of the type ( Li – Po ) and it’s the battery type that was most paid for. Although that (Li – ion) has more advantages and is considered better, it wasn’t used in many phones as the other battery type.
+
+```{r}
+with(dataset_phones, plot(dataset_phones$price.USD., dataset_phones$battery))
+```
+```{r}
+correlation <- cor(dataset_phones$battery, dataset_phones$price.USD.)
+print(correlation)
+```
+The scatter plot of the price(USD) and battery shows no meaningful linear relationship between the price and battery capacity ,changes in the price of a product are not associated with changes in the battery capacity in any consistent way.
+
+The correlation coefficient is very close to zero. This indicates a negative relationship between the two,But this could change when outliers are removed.
+
+```{r}
+with(dataset_phones, plot(dataset_phones$price.USD., dataset_phones$storage.GB.))
+
+```
+```{r}
+correlation <- cor(dataset_phones$storage.GB., dataset_phones$price.USD.)
+print(correlation)
+```
+The scatter plot and the measurements of correlation between price(USD) and storage(GB) suggests a relatively positive correlation. It's not close to 1, so the relationship between the variables is not very stronge.
+
+```{r}
+with(dataset_phones, plot(dataset_phones$ram.GB., dataset_phones$storage.GB.))
+```
+
+
+```{r}
+correlation <- cor(dataset_phones$storage.GB., dataset_phones$ram.GB.)
+print(correlation)
+
+```
+The scatter plot and correlation coefficient shows a strong positive relationship between the amount of storage(GB) and the amount of RAM(GB) .They rise togther, as storage capacity increases, the RAM capacity also tends to increase, and vice versa.
+
+having a strong positive correlation between two variables does not necessarily mean you should drop one of them, dropping one completely may not be ideal as they serve different purposes but including both storage and RAM as features can potentially improve the classification performance of our model. Even if these features are correlated, they might still contain unique information that is relevant for distinguishing between different classes. 
+```{r}
+library(ggplot2)
+ggplot(dataset_phones, aes(x = brand)) +
+  geom_bar() +
+  labs(title = "Counts of Brands", x = "Brand", y = "Count")
+```
+xiaomi is the most brand produce mobiles and Google is the least.
+
+```{r}
+ggplot(dataset_phones, aes(x = os)) +
+  geom_bar() +
+  labs(title = "Counts of Operating Systems", x = "Operating System", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+Android 11 and Android 10 is the most operating systems used in phones based on our data
+
+Based on the analysis of the operating systems graph, it is clear that the "OS"(operating system) column in our dataset contains various forms of noise. Some phones have unspecified operating system values such as "Android," while others have improperly formatted entries like "Android 10 / Android 11" or "Android 12 or 13." ,after rechecking the data the number of tuples that has this type of noise is small ,we fixed the phones that use the operating system  "Android 10 / Android 11" or "Android 12 or 13." by replacing it with the latest operating system because we asume that the phone got updated ,and the phones that use the opearting system "Android" we replaced it by "Android 11" since its the most operating system used in our data.
+```{r}
+filtered_data <- dataset_phones[dataset_phones$os == 'Android 10/ Android 11', ]
+print(filtered_data)
+```
+```{r}
+dataset_phones[888,3]<-"Android 11"
+```
+
+
+```{r}
+filtered_data <- dataset_phones[dataset_phones$os == 'Android', ]
+print(filtered_data)
+```
+```{r}
+dataset_phones[1163,3]<-"Android 11"
+dataset_phones[1233,3]<-"Android 11"
+dataset_phones[1473,3]<-"Android 11"
+```
+
+```{r}
+filtered_data <- dataset_phones[dataset_phones$os == 'Android 12 or 13', ]
+print(filtered_data)
+```
+
+```{r}
+dataset_phones[1410,3]<-"Android 13"
+dataset_phones[1412,3]<-"Android 13"
+```
+
+
+ 
+
+
+
+
+ 
+
+```{r}
+barplot(table(dataset_phones$video_1080p))
+```
+The bar plot demonstrates that nearly all of the phones in our sample have a video resolution of  1080p, which is equivalent to a Full HD resolution. In essence, the resolution of a video or image tells you about the video's quality and how clear it is. As there are more pixels, a video with a higher resolution will contain images that are more clear and brighter. offering you higher video quality in the end.
+
+
+```{r}
+barplot(table(dataset_phones$video_480fps))
+```
+This bar graph illustrates that most phones lack 480fps video capabilities. The rate at which several frames appear within a second is known as the frame rate. 480 FPS indicates that the camera is taking 480 frames or photos in a single second. When you shoot at 480 frames per second, the video will play 16 times slower. This frame rate is regarded as the foundation of super slow motion. This is common when demonstrating exceedingly quick movements. The phones in our sample are unable to record videos in slow motion at 480 frames per second, making it impossible to capture and display incredibly quick movements.
+```{r}
+phone_name_counts <- table(dataset_phones$phone_name)
+phone_name_counts_df <- as.data.frame(phone_name_counts)
+colnames(phone_name_counts_df) <- c("Phone Name", "Count")
+ print(phone_name_counts_df)
+```
+```{r}
+filtered_data <- dataset_phones[dataset_phones$phone_name == 'V30', ]
+print(filtered_data)
+```
+ 
+```{r}
+filtered_data <- dataset_phones[dataset_phones$phone_name == '9', ]
+print(filtered_data)
+```
+we noticed that there are many brands that has the same phone name. 
+## -preprocessing
+
+
+### dropping phone_name column
+```{r}
+dataset_phones <- dataset_phones[, !names(dataset_phones) %in% c("phone_name")]
+
+
+
+```
+ "phone name" in our data is a  unique identifier of the phone names as shown before and it don't carry meaningful information related to the predictive task that we are doing.
+ 
+### checking duplication after removing phone names
+```{r}
+num_duplicates <- sum(duplicated(dataset_phones))
+cat("Number of duplicate rows:", num_duplicates, "\n")
+```
+
+The removal of a unique identifier column might cause duplication but after rechecking our data the rows are not duplicated
+
+### we can extract announcement_year column from announcement_date column
+```{r}
+dataset_phones$announcement_date <- as.character(dataset_phones$announcement_date)
+ 
+ dataset_phones$announcement_year <- as.integer(sapply(strsplit(dataset_phones$announcement_date, '-'), function(x) x[1]))
+
+```
+We extracted the phones announcement year from the  announcement_date column to make data simpler,high in consistency and more focused to the predictive task we are making, since the day and month of the phone's announcement is not relevant the prices of the phone 
+
+### drop announcement_date
+```{r}
+dataset_phones <- dataset_phones[, !names(dataset_phones) %in% c("announcement_date")]
+```
+
+### extract hight and width from resoultion
+
+```{r}
+dataset_phones$width <- as.integer(sapply(strsplit(dataset_phones$resolution, "x"), "[[", 1))
+```
+
+```{r}
+dataset_phones$height <- as.integer(sapply(strsplit(dataset_phones$resolution, "x"), "[[", 2))
+```
+### droping resolution 
+```{r}
+dataset_phones <- dataset_phones[, !names(dataset_phones) %in% c("resolution")]
+```
+we split the resolution column into height and width as it would help give more detailed information about each characteristic as well as it would enable numerical operations to be done and it is easier to filter, compare and understand the correlation between each of them and the price
+
+
+
+### checking for outliers in the new added attributes(width and height)
+```{r}
+boxplot(dataset_phones$width , data = dataset_phones, xlab = "width", ylab = "Frequancy")
+```
+```{r}
+boxplot(dataset_phones$height, data = dataset_phones, xlab =" height"
+        , ylab = "Frequancy")
+```
+```{r}
+boxplot.stats(dataset_phones$height)$out
+```
+
+```{r}
+boxplot.stats(dataset_phones$width)$out
+```
+only 2 phone with the width 3840 were dedicted and considerd outliers.
+
+## removing outliers
+
+
+
+```{r}
+
+library(dplyr)
+dataset_phones<- dataset_phones%>%
+    filter(price.USD. <= 1750,
+           storage.GB. >= 8 & storage.GB. <= 512,
+           ram.GB. >= 5 & ram.GB.< 24,
+           battery >= 2500 & battery < 7000,
+           width>=480 & width<3840)
+
+```
+
+
+
+### Encoding 
+```{r}
+dataset_phones$video_720p=as.integer(as.logical(dataset_phones$video_720p))
+dataset_phones$video_1080p=as.integer(as.logical(dataset_phones$video_1080p))
+dataset_phones$video_4K=as.integer(as.logical(dataset_phones$video_4K))
+dataset_phones$video_8K=as.integer(as.logical(dataset_phones$video_8K))
+dataset_phones$video_30fps=as.integer(as.logical(dataset_phones$video_30fps))
+dataset_phones$video_60fps=as.integer(as.logical(dataset_phones$video_60fps))
+dataset_phones$video_120fps=as.integer(as.logical(dataset_phones$video_120fps))
+dataset_phones$video_240fps=as.integer(as.logical(dataset_phones$video_240fps))
+dataset_phones$video_480fps=as.integer(as.logical(dataset_phones$video_480fps))
+dataset_phones$video_960fps=as.integer(as.logical(dataset_phones$video_960fps))
+dataset_phones$battery_type=factor(dataset_phones$battery_type,levels = c("Li-Ion","Li-Po"),labels = c(0,1))
+```
+we noticed that there is logical attributes,and a character attribute with only two value only so we decided to encode the values so it will help simplify the data representation , also now after the encoding we can do calculations on the values.
+### Normalization
+```{r}
+normalize <- function(x) { return((x - min(x))/ (max(x) - min(x)))}
+dataset_phones$weight.g. <- normalize(dataset_phones$weight.g.) 
+dataset_phones$inches <- normalize(dataset_phones$inches)
+dataset_phones$battery <- normalize(dataset_phones$battery)
+dataset_phones$width <- normalize(dataset_phones$width)
+dataset_phones$height <- normalize(dataset_phones$height)
+dataset_phones$storage.GB. <- normalize(dataset_phones$storage.GB.)
+dataset_phones$ram.GB. <- normalize(dataset_phones$ram.GB.)
+```
+When features have significantly different scales, leading to biased results Normalization ensures that no single feature disproportionately influences the analysis. 
+The attributes inches, weight, and battery were normalized and scaled to accept values between 0 and 1, where each of these qualities will have an equal weight. These two stages greatly simplify and help in handling the data.
+
+### Descritisation and labeling price
+```{r}
+dataset_phones$price=cut (dataset_phones$price.USD., breaks=c(40, 610, 1180, 1750), labels=c("cheap","affordable","expensive") )
+```
+our dataset was considered as regression so we decided to discretize the price column and  add labels to the prices and divide them into 3 categories (“Cheap”, “ Affordable”, and “Expensive”) which would be more fitting, as well as it transformed our dataset from being regression into classification
+
+## Data after preprocessing
+```{r}
+summary(dataset_phones)
+
+```
+
+## Feature selection
+### measuring chi-square
+```{r}
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$phone_name)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$os)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$brand)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$battery_type)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_720p)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_1080p)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_4K)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_8K)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_30fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_60fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_120fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_240fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_480fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_960fps)
+print(result)
+
+
+result2=cor(dataset_phones$price.USD. ,dataset_phones$inches)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$battery)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$ram.GB.)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$weight.g.)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$storage.GB.)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$width)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$height)
+print(result2)
+```
+After looking at the results of chi-square we can see that from the nominal attributes (os) and from numerical attributes (width)  represents the most important attribute that contributes to the price on the other hand the  nominal attributes (video_1080p) and from numerical attributes (battery) is the least relevant to the price even though  
+it has a lower  value but it still contributes to the price so we dont consider the need for feature selection .
+```{r}
+result=cor(dataset_phones$price.USD. ,dataset_phones$ram.GB.)
+print(result)
+result=cor(dataset_phones$price.USD. ,dataset_phones$weight.g.)
+print(result)
+result=cor(dataset_phones$price.USD. ,dataset_phones$width)
+print(result)
+result=cor(dataset_phones$price.USD. ,dataset_phones$height)
+print(result)
+result=cor(dataset_phones$price.USD. ,dataset_phones$inches)
+print(result)
+
+```
+the correlation of the attributes (ram,weight,width,height,inches)with the price shows that there is a positive relationship  which mean that they will help in the classification process of the class lable which is price. 
+
