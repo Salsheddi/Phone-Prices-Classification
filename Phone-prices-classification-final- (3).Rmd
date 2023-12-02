@@ -1465,293 +1465,7 @@ For the "cheap" class, the precision is given as 0.8967.
 This indicates that when the model predicts an instance as "cheap," it is correct approximately 89.67% of the time.
 This suggests a higher level of precision for the "cheap" class compared to the "affordable" class.
 
-### classification metrics table and findings:
 
-<table style="width:29%;">
-<colgroup>
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p></p></th>
-<th><p><u><em><strong>70% training set 30% test set</strong></em></u></p>
-<p><em><strong>ID3</strong></em></p></th>
-<th><p>Gain ratio</p></th>
-<th><p>GINI INDEX</p></th>
-<th><p><u>80% training set 20% testing set</u></p>
-<p>ID3</p></th>
-<th><p>Gain ratio</p></th>
-<th><p>Gini index</p></th>
-<th><p><u>60% training set 40% testing set</u></p>
-<p>ID3</p></th>
-<th><p>Gain ratio</p></th>
-<th><p>Gini index</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><p>Accuracy</p></td>
-<td><p>86.07%</p></td>
-<td><p>87%</p></td>
-<td><p>86.69%</p></td>
-<td><p>87.96%</p></td>
-<td><p>85.65%</p></td>
-<td><p>87.04%</p></td>
-<td><p>86.57%</p></td>
-<td><p>84.49%</p></td>
-<td><p>84.26%</p></td>
-</tr>
-<tr class="even">
-<td><p>precision</p>
-<p><strong>afforadble</strong></p></td>
-<td><p>28.57%</p></td>
-<td><p>33.33%</p></td>
-<td><p>20%</p></td>
-<td><p>50%</p></td>
-<td><p>23.08%</p></td>
-<td><p>27.27%</p></td>
-<td><p>0%</p></td>
-<td><p>23.53%</p></td>
-<td><p>22.85%</p></td>
-</tr>
-<tr class="odd">
-<td><p>precision</p>
-<p><strong>cheap</strong></p></td>
-<td><p>89.22%</p></td>
-<td><p>89.58%</p></td>
-<td><p>89.61%</p></td>
-<td><p>89.05%</p></td>
-<td><p>90.10%</p></td>
-<td><p>91.09%</p></td>
-<td><p>87.58%</p></td>
-<td><p>89.70%</p></td>
-<td><p>89.67%</p></td>
-</tr>
-<tr class="even">
-<td><p>precision</p>
-<p><strong>expensive</strong></p></td>
-<td><p>33.33%</p></td>
-<td><p>100%</p></td>
-<td><p>40%</p></td>
-<td><p>Nan</p></td>
-<td><p>0%</p></td>
-<td><p>33.33%</p></td>
-<td><p>Nan</p></td>
-<td><p>Nan</p></td>
-<td><p>Nan</p></td>
-</tr>
-<tr class="odd">
-<td><p>sensitivity</p>
-<p><strong>affordable</strong></p></td>
-<td><p>12.12%</p></td>
-<td><p>15.15%</p></td>
-<td><p>6.06%</p></td>
-<td><p>13.63%</p></td>
-<td><p>13.64%</p></td>
-<td><p>13.63%</p></td>
-<td><p>0%</p></td>
-<td><p>18.18%</p></td>
-<td><p>18.18%</p></td>
-</tr>
-<tr class="even">
-<td><p>sensitivity</p>
-<p><strong>cheap</strong></p></td>
-<td><p>96.47%</p></td>
-<td><p>97.17%</p></td>
-<td><p>97.53%</p></td>
-<td><p>98.94%</p></td>
-<td><p>96.30%</p></td>
-<td><p>97.35%</p></td>
-<td><p>98.94%</p></td>
-<td><p>94.44%</p></td>
-<td><p>94.18%</p></td>
-</tr>
-<tr class="odd">
-<td><p>sensitivity</p>
-<p><strong>expensive</strong></p></td>
-<td><p>14.28%</p></td>
-<td><p>14.28%</p></td>
-<td><p>28.57%</p></td>
-<td><p>0%</p></td>
-<td><p>0%</p></td>
-<td><p>20%</p></td>
-<td><p>0%</p></td>
-<td><p>0%</p></td>
-<td><p>0%</p></td>
-</tr>
-<tr class="even">
-<td><p>specificity</p>
-<p><strong>affordable</strong></p></td>
-<td><p>96.55%</p></td>
-<td><p>96.55%</p></td>
-<td><p>97.24%</p></td>
-<td><p>98.45%</p></td>
-<td><p>94.84%</p></td>
-<td><p>95.87%</p></td>
-<td><p>98.71%</p></td>
-<td><p>93.30%</p></td>
-<td><p>93.04%</p></td>
-</tr>
-<tr class="odd">
-<td><p>specificity</p>
-<p><strong>cheap</strong></p></td>
-<td><p>17.50%</p></td>
-<td><p>20%</p></td>
-<td><p>20%</p></td>
-<td><p>14.81%</p></td>
-<td><p>25.93%</p></td>
-<td><p>33.33%</p></td>
-<td><p>1.85%</p></td>
-<td><p>24.07%</p></td>
-<td><p>24.07%</p></td>
-</tr>
-<tr class="even">
-<td><p>specificity</p>
-<p><strong>expensive</strong></p></td>
-<td><p>99.36%</p></td>
-<td><p>100%</p></td>
-<td><p>99.05%</p></td>
-<td><p>100%</p></td>
-<td><p>99.53%</p></td>
-<td><p>99.05%</p></td>
-<td><p>100%</p></td>
-<td><p>100%</p></td>
-<td><p>100%</p></td>
-</tr>
-</tbody>
-</table>
-
-In our evaluation of the classification models, specifically using Decision Trees, we conducted experiments with different partitioning ratios (70%-30%, 80%-20%, and 60%-40%) and various splitting criteria (ID3, C5.0, and CART).
-
-### results obtained using 70%-30% partition:
-
-(the best tree in this partitioning is achived using using the ration(c5.0) algorithm with an 87% accuracy) \### using the Information gain(ID3) algorithm:
-
-The decision tree model achieved an overall accuracy of 86.07%, showcasing effective predictive performance across the dataset.
-Notably, the model excelled in accurately predicting instances of the "cheap" class, demonstrating high sensitivity (96.47%) and precision (0.89).
-However, challenges were evident in distinguishing instances belonging to the "affordable" and "expensive" classes, with low sensitivities (12.12% and 14.28%, respectively) and relatively lower precision for these classes (0.28 and 0.33, respectively).
-The model's strength lies in its high specificity for both "affordable" and "expensive" classes, indicating its proficiency in correctly identifying instances not belonging to these classes.
-The overall balanced accuracy, while moderate, reflects a satisfactory average performance across all classes, emphasizing the model's effectiveness in certain categories while acknowledging areas for improvement in handling specific class distinctions.
-
-### using the ration(c5.0) algorithm:
-
-The decision tree, with "width" as the root attribute chosen for its high gain ratio, achieves an accuracy of 87%.
-Notably, it demands more splitting attributes than its predecessor.
-For the 'Affordable' class, the model exhibits a sensitivity of 15.15%, indicating a limited ability to correctly identify actual affordable phones.
-However, it demonstrates high specificity at 96.55%, proficiently identifying phones that are not affordable.
-The precision for predicted affordable phones is 33.33%, suggesting room for improvement.
-In the 'Cheap' class, the model excels with a 97.17% sensitivity, effectively identifying actual cheap phones, but faces challenges in specificity (20.00%).
-Nevertheless, the positive predictive value is strong at 89.58%, reflecting accurate labeling of phones as cheap.
-For the 'Expensive' class, the model struggles with sensitivity (14.29%) but excels in specificity (100.00%) and positive predictive value (100.00%), indicating proficiency in correctly identifying phones that are not expensive.
-Overall, the classifier performs well in identifying cheap phones, benefiting from the majority representation of cheap phones in the training dataset.
-
-### using the Gini Index algorithm:
-
-The Gini index-based decision tree achieved an accuracy of 86.69%, indicating that 86.69% of instances were correctly classified.
-Sensitivity and specificity values were used to evaluate performance for each class.
-In the "affordable" class, the model exhibited higher specificity (97.24%) than sensitivity (6.06%), suggesting conservatism in labeling positives.
-For the "cheap" class, the model excelled in sensitivity (97.53%) but struggled with specificity (20%), prone to false positives.
-The "expensive" class showed very high specificity (99.05%) but lower sensitivity (28.57%).
-
-Precision values for "affordable," "cheap," and "expensive" classes were 0.20, 0.89, and 0.40, respectively.
-The model performed well in identifying true positives for "cheap" but faced limitations in the "affordable" and "expensive" classes.
-
-In summary, the Gini index tree demonstrated moderate accuracy, excelling in classifying "cheap" instances but struggling with "affordable" and "expensive" classes.
-Comparatively, the gain ratio tree performed slightly better in overall accuracy than both the ID3 and Gini index trees in a 70-30 partition, though the difference is small, indicating comparable performance across the models.
-
-### results obtained using 80%-20% partition:
-
-(the best tree in this partitioning is achived using using the Information gain(ID3) algorithm with an 87.96% accuracy)
-
-### using the Information gain(ID3) algorithm:
-
-The decision tree achieved an overall accuracy of 87.96%, slightly higher than the 70-30 ID3 tree.
-While this suggests reasonable overall performance, the class imbalance warrants a deeper evaluation.
-Sensitivity and specificity values were crucial for assessing distinct class performance.
-In the "affordable" class, the model showed a sensitivity of 13.63% and high specificity (98.45%).
-For the "cheap" class, a 98.94% sensitivity contrasted with a low specificity of 14.81%, revealing challenges in identifying actual negatives.
-The "expensive" class displayed 0% sensitivity and 100% specificity.
-
-Precision values further highlighted the model's ability to make correct positive predictions.
-A precision of 0.5 for "affordable" suggests accuracy in half of the predictions, while the "cheap" class exhibited higher precision at 0.8905.
-However, precision for the "expensive" class was NaN, indicating a lack of correct positive predictions.
-
-In summary, the decision tree demonstrated good overall accuracy but faced challenges in correctly classifying instances for specific classes, especially "expensive." Specificity, sensitivity, and precision values provided a nuanced understanding of the model's performance for each class, emphasizing the importance of considering these metrics, especially in the context of imbalanced data.
-
-### using the ration(c5.0) algorithm:
-
-The decision tree model, employing "width" as the root attribute based on the highest gain ratio, demonstrated an accuracy of 85.6%.
-Despite its overall accuracy, the model exhibited significant limitations in accurately classifying "affordable" and "expensive" phones.
-Notably, it displayed a low sensitivity of 13.64% for "affordable" phones, misclassifying a substantial portion as "cheap." In contrast, the model performed well in identifying "cheap" phones, with a high sensitivity of 96.30% and precision of 90.10%.
-However, it completely failed to detect instances in the "expensive" class, misclassifying them predominantly as "affordable." The classifier's lowest average precision suggests challenges in making correct positive predictions across classes.
-While achieving specificity in identifying instances not belonging to the classes, the model's struggles with sensitivity and precision, particularly for minority classes, indicate areas for improvement and optimization in future iterations.
-
-### using the Gini Index algorithm:
-
-The Gini index-based decision tree exhibited an accuracy of 87.04%, slightly lower than the ID3 tree.
-Despite this, it achieved a high overall correctness in classifying instances.
-Notably, it prioritized accuracy for the "cheap" class (Sensitivity: 97.35%, Specificity: 33.33%, Precision: 91.09%), while struggling with the "expensive" (Sensitivity: 20%, Specificity: 99.05%, Precision: 33.33%) and "affordable" (Sensitivity: 13.64%, Specificity: 95.88%, Precision: 27.27%) classes due to dataset imbalance.
-Despite these challenges, the tree maintained a reasonably high accuracy level.
-
-### results obtained using 60%-40% partition:
-
-(the best tree in this partitioning is achived using using the Information gain(ID3) algorithm with an 86.57% accuracy)
-
-### using the Information gain(ID3) algorithm:
-
-The decision tree, utilizing "Width" as the root splitting attribute, demonstrated an 86.57% accuracy.
-However, it faced challenges classifying instances into "expensive" and "affordable" categories, hinting at underrepresentation and imbalances in the dataset, particularly with an abundance of "cheap" instances.
-
-Sensitivity and specificity analyses unveiled strengths and weaknesses.
-Notably, the model excelled in "cheap" class sensitivity (98.94%) but struggled with specificity (1.85%).
-For the "affordable" class, it had 0% sensitivity but high specificity (98.71%).
-Sensitivity for the "expensive" class was 0%, accompanied by 100% specificity.
-
-Precision highlighted limitations, with 0% precision for the "affordable" class and undefined precision for "expensive." Yet, it demonstrated efficacy in predicting "cheap" instances with 87.58% precision.
-
-In summary, the model faced challenges with "affordable" and "expensive" class classifications.
-While excelling in sensitivity for "cheap," specificity issues emerged.
-The lack of positive predictions for "expensive" underscores a failure in recognizing positive instances in this class.
-The findings emphasize the impact of dataset characteristics, including class distribution and imbalance, on model performance and potential bias.
-
-### using the ration(c5.0) algorithm:
-
-The decision tree, with "width" as the root like ID3,its based on the highest gain ratio, achieved an overall accuracy of 84% .
-Notably, the model encountered difficulties in accurately classifying "expensive" and "affordable" phones.
-For the "affordable" class, it exhibited low sensitivity (18.18%) and precision (23.53%), indicating challenges in correctly identifying and predicting instances.
-In contrast, the model demonstrated high sensitivity (94.44%) and precision (89.70%) for the "cheap" class , excelling in accurately identifying and predicting instances within this category.
-However, for the "expensive" class, the model exhibited a complete failure in sensitivity (0.00%), failing to identify any actual expensive phones.
-The specificity for all classes was relatively high, particularly notable for the "expensive" class.
-These results emphasize the trade-offs and limitations in the model's performance, with notable challenges in detecting instances in certain classes, particularly "expensive."
-
-### using the Gini Index algorithm:
-
-The Gini index-based decision tree achieved an accuracy of 84.26%, lower than the ID3 tree, primarily due to challenges in correctly identifying instances of the "expensive" class.
-The struggle to accurately classify expensive instances likely contributed to the overall decrease in accuracy, indicating limitations in capturing the complex patterns associated with this class.
-
-The difficulties faced by the decision tree in identifying expensive instances can be attributed to imbalanced data and the chosen partition strategy.
-Sensitivity (recall) for the "affordable" class was 0.18182, indicating only 18.18% of actual "affordable" instances were correctly classified.
-Specificity for "affordable" was high at 93.94%, suggesting accurate identification of instances not labeled as "affordable." For the "cheap" class, the model exhibited high sensitivity (94.08%) but lower specificity (24.07%), indicating a higher rate of false positives.
-
-Sensitivity and specificity for the "expensive" class were both 0, indicating the model failed to correctly classify any instances as "expensive" in the dataset.
-Positive predictive value (precision) was provided for "affordable" (0.22857) and "cheap" (0.8967) classes, reflecting the proportions of correct positive predictions within each class.
-The higher precision for "cheap" compared to "affordable" suggests greater accuracy in predicting instances labeled as "cheap."
-
-### -OVERALL CONCLUSION-
-
-When comparing the performance of different algorithms and partition ratios, it's clear that the C5.0 algorithm consistently struggles to accurately classify instances as "affordable" or "expensive," even though it performs well in predicting "cheap" instances.
-In the 70%-30% partition, the C5.0 decision tree demonstrates a good balance in accurately identifying "cheap" phones, with high sensitivity and precision for the "cheap" class (187 out of 189 cheap phones correctly classified).
-However, it faces challenges in classifying phones as "affordable" or "expensive." Despite efforts like using stratified sampling to address the imbalanced dataset, our goal of building a model that effectively classifies phones into "cheap," "affordable," and "expensive" categories remains unachieved.
-The imbalance in the data, especially the limited representation of "expensive" instances, contributes to the model's struggles in detecting and predicting instances belonging to the "expensive" class.
 
 ### load the data after preprocessing to a CVS file
 
@@ -2135,11 +1849,298 @@ Lastly, because the overlap in k -\> 4 is somewhat considered high and TWSS was 
 | visualization                       | Figure(1) above                  | Figure(2) above                   | Figure(3) above                  |
 +-------------------------------------+----------------------------------+-----------------------------------+----------------------------------+
 
-###findings
+## findings:
 
-##classification
+### classification:
+### classification metrics table and findings:
 
-##clustring 
+<table style="width:29%;">
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p></p></th>
+<th><p><u><em><strong>70% training set 30% test set</strong></em></u></p>
+<p><em><strong>ID3</strong></em></p></th>
+<th><p>Gain ratio</p></th>
+<th><p>GINI INDEX</p></th>
+<th><p><u>80% training set 20% testing set</u></p>
+<p>ID3</p></th>
+<th><p>Gain ratio</p></th>
+<th><p>Gini index</p></th>
+<th><p><u>60% training set 40% testing set</u></p>
+<p>ID3</p></th>
+<th><p>Gain ratio</p></th>
+<th><p>Gini index</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>Accuracy</p></td>
+<td><p>86.07%</p></td>
+<td><p>87%</p></td>
+<td><p>86.69%</p></td>
+<td><p>87.96%</p></td>
+<td><p>85.65%</p></td>
+<td><p>87.04%</p></td>
+<td><p>86.57%</p></td>
+<td><p>84.49%</p></td>
+<td><p>84.26%</p></td>
+</tr>
+<tr class="even">
+<td><p>precision</p>
+<p><strong>afforadble</strong></p></td>
+<td><p>28.57%</p></td>
+<td><p>33.33%</p></td>
+<td><p>20%</p></td>
+<td><p>50%</p></td>
+<td><p>23.08%</p></td>
+<td><p>27.27%</p></td>
+<td><p>0%</p></td>
+<td><p>23.53%</p></td>
+<td><p>22.85%</p></td>
+</tr>
+<tr class="odd">
+<td><p>precision</p>
+<p><strong>cheap</strong></p></td>
+<td><p>89.22%</p></td>
+<td><p>89.58%</p></td>
+<td><p>89.61%</p></td>
+<td><p>89.05%</p></td>
+<td><p>90.10%</p></td>
+<td><p>91.09%</p></td>
+<td><p>87.58%</p></td>
+<td><p>89.70%</p></td>
+<td><p>89.67%</p></td>
+</tr>
+<tr class="even">
+<td><p>precision</p>
+<p><strong>expensive</strong></p></td>
+<td><p>33.33%</p></td>
+<td><p>100%</p></td>
+<td><p>40%</p></td>
+<td><p>Nan</p></td>
+<td><p>0%</p></td>
+<td><p>33.33%</p></td>
+<td><p>Nan</p></td>
+<td><p>Nan</p></td>
+<td><p>Nan</p></td>
+</tr>
+<tr class="odd">
+<td><p>sensitivity</p>
+<p><strong>affordable</strong></p></td>
+<td><p>12.12%</p></td>
+<td><p>15.15%</p></td>
+<td><p>6.06%</p></td>
+<td><p>13.63%</p></td>
+<td><p>13.64%</p></td>
+<td><p>13.63%</p></td>
+<td><p>0%</p></td>
+<td><p>18.18%</p></td>
+<td><p>18.18%</p></td>
+</tr>
+<tr class="even">
+<td><p>sensitivity</p>
+<p><strong>cheap</strong></p></td>
+<td><p>96.47%</p></td>
+<td><p>97.17%</p></td>
+<td><p>97.53%</p></td>
+<td><p>98.94%</p></td>
+<td><p>96.30%</p></td>
+<td><p>97.35%</p></td>
+<td><p>98.94%</p></td>
+<td><p>94.44%</p></td>
+<td><p>94.18%</p></td>
+</tr>
+<tr class="odd">
+<td><p>sensitivity</p>
+<p><strong>expensive</strong></p></td>
+<td><p>14.28%</p></td>
+<td><p>14.28%</p></td>
+<td><p>28.57%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>20%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="even">
+<td><p>specificity</p>
+<p><strong>affordable</strong></p></td>
+<td><p>96.55%</p></td>
+<td><p>96.55%</p></td>
+<td><p>97.24%</p></td>
+<td><p>98.45%</p></td>
+<td><p>94.84%</p></td>
+<td><p>95.87%</p></td>
+<td><p>98.71%</p></td>
+<td><p>93.30%</p></td>
+<td><p>93.04%</p></td>
+</tr>
+<tr class="odd">
+<td><p>specificity</p>
+<p><strong>cheap</strong></p></td>
+<td><p>17.50%</p></td>
+<td><p>20%</p></td>
+<td><p>20%</p></td>
+<td><p>14.81%</p></td>
+<td><p>25.93%</p></td>
+<td><p>33.33%</p></td>
+<td><p>1.85%</p></td>
+<td><p>24.07%</p></td>
+<td><p>24.07%</p></td>
+</tr>
+<tr class="even">
+<td><p>specificity</p>
+<p><strong>expensive</strong></p></td>
+<td><p>99.36%</p></td>
+<td><p>100%</p></td>
+<td><p>99.05%</p></td>
+<td><p>100%</p></td>
+<td><p>99.53%</p></td>
+<td><p>99.05%</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+</tr>
+</tbody>
+</table>
+
+In our evaluation of the classification models, specifically using Decision Trees, we conducted experiments with different partitioning ratios (70%-30%, 80%-20%, and 60%-40%) and various splitting criteria (ID3, C5.0, and CART).
+
+### results obtained using 70%-30% partition:
+
+(the best tree in this partitioning is achived using using the ration(c5.0) algorithm with an 87% accuracy) \### using the Information gain(ID3) algorithm:
+
+The decision tree model achieved an overall accuracy of 86.07%, showcasing effective predictive performance across the dataset.
+Notably, the model excelled in accurately predicting instances of the "cheap" class, demonstrating high sensitivity (96.47%) and precision (0.89).
+However, challenges were evident in distinguishing instances belonging to the "affordable" and "expensive" classes, with low sensitivities (12.12% and 14.28%, respectively) and relatively lower precision for these classes (0.28 and 0.33, respectively).
+The model's strength lies in its high specificity for both "affordable" and "expensive" classes, indicating its proficiency in correctly identifying instances not belonging to these classes.
+The overall balanced accuracy, while moderate, reflects a satisfactory average performance across all classes, emphasizing the model's effectiveness in certain categories while acknowledging areas for improvement in handling specific class distinctions.
+
+### using the ration(c5.0) algorithm:
+
+The decision tree, with "width" as the root attribute chosen for its high gain ratio, achieves an accuracy of 87%.
+Notably, it demands more splitting attributes than its predecessor.
+For the 'Affordable' class, the model exhibits a sensitivity of 15.15%, indicating a limited ability to correctly identify actual affordable phones.
+However, it demonstrates high specificity at 96.55%, proficiently identifying phones that are not affordable.
+The precision for predicted affordable phones is 33.33%, suggesting room for improvement.
+In the 'Cheap' class, the model excels with a 97.17% sensitivity, effectively identifying actual cheap phones, but faces challenges in specificity (20.00%).
+Nevertheless, the positive predictive value is strong at 89.58%, reflecting accurate labeling of phones as cheap.
+For the 'Expensive' class, the model struggles with sensitivity (14.29%) but excels in specificity (100.00%) and positive predictive value (100.00%), indicating proficiency in correctly identifying phones that are not expensive.
+Overall, the classifier performs well in identifying cheap phones, benefiting from the majority representation of cheap phones in the training dataset.
+
+### using the Gini Index algorithm:
+
+The Gini index-based decision tree achieved an accuracy of 86.69%, indicating that 86.69% of instances were correctly classified.
+Sensitivity and specificity values were used to evaluate performance for each class.
+In the "affordable" class, the model exhibited higher specificity (97.24%) than sensitivity (6.06%), suggesting conservatism in labeling positives.
+For the "cheap" class, the model excelled in sensitivity (97.53%) but struggled with specificity (20%), prone to false positives.
+The "expensive" class showed very high specificity (99.05%) but lower sensitivity (28.57%).
+
+Precision values for "affordable," "cheap," and "expensive" classes were 0.20, 0.89, and 0.40, respectively.
+The model performed well in identifying true positives for "cheap" but faced limitations in the "affordable" and "expensive" classes.
+
+In summary, the Gini index tree demonstrated moderate accuracy, excelling in classifying "cheap" instances but struggling with "affordable" and "expensive" classes.
+Comparatively, the gain ratio tree performed slightly better in overall accuracy than both the ID3 and Gini index trees in a 70-30 partition, though the difference is small, indicating comparable performance across the models.
+
+### results obtained using 80%-20% partition:
+
+(the best tree in this partitioning is achived using using the Information gain(ID3) algorithm with an 87.96% accuracy)
+
+### using the Information gain(ID3) algorithm:
+
+The decision tree achieved an overall accuracy of 87.96%, slightly higher than the 70-30 ID3 tree.
+While this suggests reasonable overall performance, the class imbalance warrants a deeper evaluation.
+Sensitivity and specificity values were crucial for assessing distinct class performance.
+In the "affordable" class, the model showed a sensitivity of 13.63% and high specificity (98.45%).
+For the "cheap" class, a 98.94% sensitivity contrasted with a low specificity of 14.81%, revealing challenges in identifying actual negatives.
+The "expensive" class displayed 0% sensitivity and 100% specificity.
+
+Precision values further highlighted the model's ability to make correct positive predictions.
+A precision of 0.5 for "affordable" suggests accuracy in half of the predictions, while the "cheap" class exhibited higher precision at 0.8905.
+However, precision for the "expensive" class was NaN, indicating a lack of correct positive predictions.
+
+In summary, the decision tree demonstrated good overall accuracy but faced challenges in correctly classifying instances for specific classes, especially "expensive." Specificity, sensitivity, and precision values provided a nuanced understanding of the model's performance for each class, emphasizing the importance of considering these metrics, especially in the context of imbalanced data.
+
+### using the ration(c5.0) algorithm:
+
+The decision tree model, employing "width" as the root attribute based on the highest gain ratio, demonstrated an accuracy of 85.6%.
+Despite its overall accuracy, the model exhibited significant limitations in accurately classifying "affordable" and "expensive" phones.
+Notably, it displayed a low sensitivity of 13.64% for "affordable" phones, misclassifying a substantial portion as "cheap." In contrast, the model performed well in identifying "cheap" phones, with a high sensitivity of 96.30% and precision of 90.10%.
+However, it completely failed to detect instances in the "expensive" class, misclassifying them predominantly as "affordable." The classifier's lowest average precision suggests challenges in making correct positive predictions across classes.
+While achieving specificity in identifying instances not belonging to the classes, the model's struggles with sensitivity and precision, particularly for minority classes, indicate areas for improvement and optimization in future iterations.
+
+### using the Gini Index algorithm:
+
+The Gini index-based decision tree exhibited an accuracy of 87.04%, slightly lower than the ID3 tree.
+Despite this, it achieved a high overall correctness in classifying instances.
+Notably, it prioritized accuracy for the "cheap" class (Sensitivity: 97.35%, Specificity: 33.33%, Precision: 91.09%), while struggling with the "expensive" (Sensitivity: 20%, Specificity: 99.05%, Precision: 33.33%) and "affordable" (Sensitivity: 13.64%, Specificity: 95.88%, Precision: 27.27%) classes due to dataset imbalance.
+Despite these challenges, the tree maintained a reasonably high accuracy level.
+
+### results obtained using 60%-40% partition:
+
+(the best tree in this partitioning is achived using using the Information gain(ID3) algorithm with an 86.57% accuracy)
+
+### using the Information gain(ID3) algorithm:
+
+The decision tree, utilizing "Width" as the root splitting attribute, demonstrated an 86.57% accuracy.
+However, it faced challenges classifying instances into "expensive" and "affordable" categories, hinting at underrepresentation and imbalances in the dataset, particularly with an abundance of "cheap" instances.
+
+Sensitivity and specificity analyses unveiled strengths and weaknesses.
+Notably, the model excelled in "cheap" class sensitivity (98.94%) but struggled with specificity (1.85%).
+For the "affordable" class, it had 0% sensitivity but high specificity (98.71%).
+Sensitivity for the "expensive" class was 0%, accompanied by 100% specificity.
+
+Precision highlighted limitations, with 0% precision for the "affordable" class and undefined precision for "expensive." Yet, it demonstrated efficacy in predicting "cheap" instances with 87.58% precision.
+
+In summary, the model faced challenges with "affordable" and "expensive" class classifications.
+While excelling in sensitivity for "cheap," specificity issues emerged.
+The lack of positive predictions for "expensive" underscores a failure in recognizing positive instances in this class.
+The findings emphasize the impact of dataset characteristics, including class distribution and imbalance, on model performance and potential bias.
+
+### using the ration(c5.0) algorithm:
+
+The decision tree, with "width" as the root like ID3,its based on the highest gain ratio, achieved an overall accuracy of 84% .
+Notably, the model encountered difficulties in accurately classifying "expensive" and "affordable" phones.
+For the "affordable" class, it exhibited low sensitivity (18.18%) and precision (23.53%), indicating challenges in correctly identifying and predicting instances.
+In contrast, the model demonstrated high sensitivity (94.44%) and precision (89.70%) for the "cheap" class , excelling in accurately identifying and predicting instances within this category.
+However, for the "expensive" class, the model exhibited a complete failure in sensitivity (0.00%), failing to identify any actual expensive phones.
+The specificity for all classes was relatively high, particularly notable for the "expensive" class.
+These results emphasize the trade-offs and limitations in the model's performance, with notable challenges in detecting instances in certain classes, particularly "expensive."
+
+### using the Gini Index algorithm:
+
+The Gini index-based decision tree achieved an accuracy of 84.26%, lower than the ID3 tree, primarily due to challenges in correctly identifying instances of the "expensive" class.
+The struggle to accurately classify expensive instances likely contributed to the overall decrease in accuracy, indicating limitations in capturing the complex patterns associated with this class.
+
+The difficulties faced by the decision tree in identifying expensive instances can be attributed to imbalanced data and the chosen partition strategy.
+Sensitivity (recall) for the "affordable" class was 0.18182, indicating only 18.18% of actual "affordable" instances were correctly classified.
+Specificity for "affordable" was high at 93.94%, suggesting accurate identification of instances not labeled as "affordable." For the "cheap" class, the model exhibited high sensitivity (94.08%) but lower specificity (24.07%), indicating a higher rate of false positives.
+
+Sensitivity and specificity for the "expensive" class were both 0, indicating the model failed to correctly classify any instances as "expensive" in the dataset.
+Positive predictive value (precision) was provided for "affordable" (0.22857) and "cheap" (0.8967) classes, reflecting the proportions of correct positive predictions within each class.
+The higher precision for "cheap" compared to "affordable" suggests greater accuracy in predicting instances labeled as "cheap."
+
+### -OVERALL CONCLUSION-
+
+When comparing the performance of different algorithms and partition ratios, it's clear that the C5.0 algorithm consistently struggles to accurately classify instances as "affordable" or "expensive," even though it performs well in predicting "cheap" instances.
+In the 70%-30% partition, the C5.0 decision tree demonstrates a good balance in accurately identifying "cheap" phones, with high sensitivity and precision for the "cheap" class (187 out of 189 cheap phones correctly classified).
+However, it faces challenges in classifying phones as "affordable" or "expensive." Despite efforts like using stratified sampling to address the imbalanced dataset, our goal of building a model that effectively classifies phones into "cheap," "affordable," and "expensive" categories remains unachieved.
+The imbalance in the data, especially the limited representation of "expensive" instances, contributes to the model's struggles in detecting and predicting instances belonging to the "expensive" class.
+
+### clustring:
 We compared the results of three different value k clusters (2,4,6) using k-means method.
 After careful analysis, it was determined that 4 clusters are the most appropriate and suitable choice for our data set.
 
@@ -2162,3 +2163,12 @@ It's important to remember that some overlap is OK as long as it doesn't impair 
 
 Our dataset may be imbalanced, causing potential bias or misleading results when used for clustering, which required careful evaluation of its outcomes.
 In conclusion, there was some disagreement between k=4 and k=6 after all calculations had been performed, but this was resolved when we compared all of the results above and it was determined that 4 clusters were the most appropriate and acceptable choice for our specific dataset, to ensure reliable and relevant results.
+
+### Reference:
+[1]“Phone Prices,” www.kaggle.com. https://www.kaggle.com/datasets/berkayeserr/phone-prices (accessed Dec. 02, 2023).
+
+[2]“RPubs - Data Mining: Classification with Decision Trees,” rpubs.com. https://rpubs.com/kjmazidi/195428
+
+[3]“RPubs - Classification and Regression Trees (CART) in R,” rpubs.com. https://rpubs.com/camguild/803096
+
+[4]Zach, “Stratified Sampling in R (With Examples),” Statology, Aug. 24, 2020. https://www.statology.org/stratified-sampling-r/ (accessed Dec. 02, 2023).
