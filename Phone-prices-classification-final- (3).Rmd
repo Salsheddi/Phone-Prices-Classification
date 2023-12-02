@@ -1,0 +1,2071 @@
+---
+title: "predict phone price |data mining project G3"
+output:
+  html_document:
+    df_print: paged
+ml_document:
+  html_notebook: default
+  pdf_document: default
+editor_options:
+  chunk_output_type: inline
+  markdown: 
+    wrap: sentence
+---
+
+## 1.Problem
+
+Mobile devices have significantly changed how individuals work, socialize, plan, and entertain themselves.
+There are numerous companies that provide us with phones with varied features; as part of our project, we will compare the prices of phones from different companies depending on features like brand, operating system, storage, and others.
+We were interested in this dataset because we want to build a classification model that helps people choose the right phone for them taking into consideration the features compared to the price.
+
+## 2.Data mining task
+
+The objective of this dataset is to use data mining techniques such as classification and clustering to develop a predictive model.
+This model will categorize and estimate the price range of popular phone brands based on their distinctive features.
+Specifically, the aim is to classify phones into categories such as "expensive," "affordable," or "cheap," based on the phone's price, and clustering while taking into account their ongoing manufacturing and the wealth of information contained in the dataset.
+
+## 3.Data
+
+### -Dataset Source :
+
+We took the dataset from kaggle, an online platfrom for data science competitons and collaboration, offering datasets, computing resources and a community of data scientists
+
+Dataset URL : <https://www.kaggle.com/datasets/berkayeserr/phone-prices>
+
+### -main characteristics of attributes :
+
+The dataset consists of 22 columns(attributes) and 1512 rows
+
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| Attributes name   | Describtion                                   | Data type | possible values                                               |
++===================+===============================================+===========+===============================================================+
+| phone_name        | name of the phone                             | nominal   | 1496 possible unique values                                   |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| brand             | brand of the phone                            | nominal   | Xiaomi, Oppo, Samsung, Vivo, Realme]                          |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| os                | operating system of the phone                 | nominal   | [Android 11, Android 10 ,Android 12, Android 9.0 ,Android 13] |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| inches            | size of the phone screen                      | numeric   | 3.5 - 10.5                                                    |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| resoultion        | resoultion of the phone screen width x height | nominal   | 1080x2400 720x1600 1080x2340 1080x2408 720x1520               |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| battery           | battery capacity of the phone                 | numeric   | 1500 - 7500                                                   |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| battery_type      | battery type of the phone                     | binary    | Li-Po Li-Ion                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| ram(GB)           | ram of the phone as gigabyte                  | numeric   | 0 -24                                                         |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| announcement_date | the date of the announcement of the phone     | nominal   | 1 sep 2016 - 31 Aug 23                                        |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| weight(g)         | weight of the phone in grams                  | numeric   | 100-500                                                       |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| storage(GB)       | storage capacity of the phone as GB           | numeric   | 0-550                                                         |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| video_720p        | does phone camera has 720p feature            | binary    | TRUE , FALSE                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| video_1080p       | does phone camera has 1080p feature           | binary    | TRUE , FALSE                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| video_4K          | does phone camera has 4K feature              | binary    | TRUE , FALSE                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| video_8K          | does phone camera has 8K feature              | binary    | TRUE , FALSE                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| video_30fps       | does phone camera has 30fps feature           | binary    | TRUE , FLASE                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| video_120fps      | does phone camera has 120fps feature          | binary    | TRUE , FALSE                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| video_240fps      | does phone camera has 240fps feature          | binary    | TRUE , FALSE                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| video_480fps      | does phone camera has 480fps feature          | binary    | TRUE , FALSE                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| video_960fps      | does phone camera has 960fps feature          | binary    | TRUE , FALSE                                                  |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+| price(USD         | price of the phone as USD                     | numeric   | 0 - 2400                                                      |
++-------------------+-----------------------------------------------+-----------+---------------------------------------------------------------+
+
+## -Data loading
+
+```{r}
+dataset_phones=read.csv("cleaned_all_phones.csv",header=TRUE,sep=',') 
+```
+
+## -libraries and packages loading
+
+```{r}
+install.packages("ggplot2") 
+library(ggplot2)
+installed.packages("dplyr")
+library(dplyr)
+```
+
+## -Data Exploration and Summary using R
+
+### -number of objects
+
+```{r}
+nrow(dataset_phones)
+
+```
+
+### -number of attributes
+
+```{r}
+ncol(dataset_phones)
+```
+
+### sample of first 10 rows
+
+```{r}
+head(dataset_phones,10)
+```
+
+### sample of last 10 rows
+
+```{r}
+tail(dataset_phones,10)
+```
+
+### -structure of the dataset
+
+```{r}
+str(dataset_phones)
+```
+
+The dataset contains 1512 rows (observations) and 22 columns (variables or attributes),each row represents a different phone, and each column represents a specific attribute or characteristic of the phone.The dataset includes a mix of different data types: Character data types (e.g., phone_name, brand, os, resolution, battery_type).
+Numeric data types (e.g., inches, battery, ram(GB), weight(g), storage(GB), price(USD)).
+Logical data types (e.g., video_720p, video_1080p, video_4K, ...).
+
+The data types used for each attribute are generally appropriate based on the nature of the data.
+for example, character data types are used for textual or categorical information like phone names and brands, while numeric data types are used for measurements such as battery capacity and price .the dataset have been loaded correctly with the appropriate data types assigned to each attribute
+
+### -checking for missing values
+
+```{r}
+dim(dataset_phones)
+dataset_phones=na.omit(dataset_phones)
+dim(dataset_phones)
+sum(is.na(dataset_phones))
+
+```
+
+We checked for missing values and there were no tuples that had a no recorded value (nulls or NA (none answer)) for all attributes which indicates that all tuples have a recorded value, meaning we do not need to do any processing to clean the data from missing values.
+
+### -checking for duplication
+
+```{r}
+num_duplicates <- sum(duplicated(dataset_phones))
+cat("Number of duplicate rows:", num_duplicates, "\n")
+```
+
+there's no duplicate tuples that requires data cleaning
+
+### -statistical measures
+
+```{r}
+summary(dataset_phones)
+```
+
+After doing the summary we can predict the distribution of the data for each column by comparing the mean and the median .
+in inches,battery columns we can see that both of them are symmetric because Q1,Q2,Q3 are approximately equal ram.GB.,weight.g.,storage.GB.,price.USD.
+columns we can see that all of them right-skewed because Q2 is closer to Q3
+
+also we can get the range for every column by seeing the Max value and the min value .
+for the inches column the we can describe the range as the following (3.800 to 10.400) for battery column the range as the following (1821 to 7250 ) for ram.GB.
+column the range as the following (1.000 to 24.000) which is the Biggest Range from all column for weight.g.
+column the range as the following (130.0 to 500.0) for storage.GB.
+column the range as the following (1.0 to 512.0 ) for price.USD.
+column the range as the following (40.0 to 2300.0)
+
+## Central Tendency
+
+### Mean
+
+```{r}
+mean(dataset_phones$inches)
+mean(dataset_phones$battery)
+mean(dataset_phones$ram.GB.)
+mean(dataset_phones$weight.g.)
+mean(dataset_phones$storage.GB.)
+mean(dataset_phones$price.USD.)
+
+```
+
+the mean represents the central value of the Data Set ,indicating the average of all of the number,the mean is sensitive to extreme value.
+This single value for the mean is much easier to interpret compared to staring at all of the rows of raw data we can see that battery column has the highest mean which is (4389.799) on the other hand we can see that the inches column has the lowest mean which is (6.42246) which is slightly close to ram.GB.
+column (6.683862)
+
+### Median
+
+```{r}
+median(dataset_phones$inches)
+median(dataset_phones$battery)
+median(dataset_phones$ram.GB.)
+median(dataset_phones$weight.g.)
+median(dataset_phones$storage.GB.)
+median(dataset_phones$price.USD.)
+```
+
+The median is a measure of central tendency that represents the middle value of a Data set It provides a measure of central tendency that is not affected by extreme values as much as the mean.
+The median is an important to calculate because it gives us an idea of where the center of a data set is located for each column we can see that the center for battery column is (4500) which is the biggest median of all column on the other hand inches column is (6.5)which is the smallest median.
+
+### Mode
+
+```{r}
+
+variables <- c(
+  "phone_name", "brand", "os", "inches", "resolution", "battery",
+  "battery_type", "ram.GB.", "announcement_date", "weight.g.",
+  "storage.GB.", "video_720p", "video_1080p", "video_4K",
+  "video_8K", "video_30fps", "video_60fps", "video_120fps",
+  "video_240fps", "video_480fps", "video_960fps", "price.USD."
+)
+
+
+find_mode <- function(x) {
+  tab <- table(x)
+  names(tab)[tab == max(tab)]
+}
+
+
+for (variable in variables) {
+  cat("Variable:", variable, "\n")
+  cat("Mode(s):", find_mode(y[[variable]]), "\n\n")
+}
+
+```
+
+The mode is the value that occurs with the highest frequency in a dataset.
+It represents the most common observation or category.
+for our data set all the column have one mode which mean it is unimodal.
+
+### Midrange
+
+```{r}
+z<-c(dataset_phones)
+max(z$inches)+ min(z$inches)/2
+max(z$battery)+ min(z$battery)/2
+max(z$ram.GB.)+ min(z$ram.GB.)/2
+max(z$weight.g.)+ min(z$weight.g.)/2
+max(z$storage.GB.)+ min(z$storage.GB.)/2
+max(z$price.USD.)+ min(z$price.USD.)/2
+```
+
+The midrange is a simple statistical measure that provides a rough estimate of the center of a data set it provides a simple measure that summarizes the spread of data by considering the range.
+when we look at the data we can see that battery column has the highest midrange which is(8160.5)on the other hand inches column has the smallest midrange which is(12.3) \### Variance
+
+```{r}
+var(dataset_phones$inches)
+var(dataset_phones$battery)
+var(dataset_phones$ram.GB.)
+var(dataset_phones$weight.g.)
+var(dataset_phones$storage.GB.)
+var(dataset_phones$price.USD.)
+```
+
+Variance is a statistical measure used to quantify the spread or dispersion of a set of data points.
+The variance is always a non-negative value.
+A small variance like the variance for inches column (0.2275701)indicates that the data points are closely clustered around the mean, while a large variance like the variance for battery column suggests that the data points are spread out over a wider range.
+
+### Standard Deviation
+
+```{r}
+sd(dataset_phones$inches)
+sd(dataset_phones$battery)
+sd(dataset_phones$ram.GB.)
+sd(dataset_phones$weight.g.)
+sd(dataset_phones$storage.GB.)
+sd(dataset_phones$price.USD.)
+
+```
+
+The standard deviation is a statistical measure that quantifies the dispersion or variability of a set of data points.
+It is closely related to the variance but provides a measure of dispersion that is in the same unit as the original data.
+A small standard deviation like the standard deviation for inches column(0.4770431) suggests that the data points are closely clustered around the mean,which indicating less variability.On the other hand a large standard deviation like the standard deviation for battery column (784.607)indicates that the data points are spread out over a wider range,which indicating greater variability.
+
+## Dispersion of data
+
+### Range
+
+```{r}
+range(dataset_phones$inches)
+range(dataset_phones$battery)
+range(dataset_phones$ram.GB.)
+range(dataset_phones$weight.g.)
+range(dataset_phones$storage.GB.)
+range(dataset_phones$price.USD.)
+```
+
+The range is a simple statistical measure that represents the difference between the highest and lowest values in a data set.
+It provides a basic understanding of the spread or variability of the data.
+A larger range like the range for the inches column( 3.8 to 10.4) indicates a wider spread and greater variability, while a smaller range like the range for the battery column(1821 to 7250) suggests a narrower spread and less variability.
+
+### Quartiles
+
+```{r}
+quantile(dataset_phones$inches,c(0.25,0.50,0.75))
+quantile(dataset_phones$battery,c(0.25,0.50,0.75))
+quantile(dataset_phones$ram.GB.,c(0.25,0.50,0.75))
+quantile(dataset_phones$weight.g.,c(0.25,0.50,0.75))
+quantile(dataset_phones$storage.GB.,c(0.25,0.50,0.75))
+quantile(dataset_phones$price.USD.,c(0.25,0.50,0.75))
+```
+
+The three Quartiles are denoted as Q1 is found by finding the median of the values between the minimum and the median, Q2 simply referred to as the median, and Q3 is found by finding the median of the values between the median and the maximum.
+
+### Interquartile Range
+
+```{r}
+IQR(dataset_phones$inches)
+IQR(dataset_phones$battery)
+IQR(dataset_phones$ram.GB.)
+IQR(dataset_phones$weight.g.)
+IQR(dataset_phones$storage.GB.)
+IQR(dataset_phones$price.USD.)
+```
+
+Interquartile Range It measures the spread of the middle 50% of the data and is useful for identifying outliers.
+Outliers are data points that fall below Q1 - 1.5 \* IQR or above Q3 + 1.5 \* IQR.
+By comparing individual data points to the quartiles and the IQR, you can identify values that lie significantly outside the expected range.
+
+for the inches column the max_outlier\>7.22 and the min_outlier\< 5.74 for the battery column the max_outlier\>6500 and the min_outlier\< 2500 for the ram.GB.
+column the max_outlier\>14 and the min_outlier\<-2 for the weight.g.
+column the max_outlier\>230.62 and the min_outlier\<141.62 for the storage.GB.
+column the max_outlier\>224 and the min_outlier\<-32 for the price.USD.
+column the max_outlier\>730.0037 and the min_outlier\<-150.0062
+
+## Data visualization
+
+### Box plots and outliers detecting
+
+```{r}
+boxplot(dataset_phones$storage.GB. , data = dataset_phones, xlab = "Storage(GB)", ylab = "Frequency")
+```
+
+```{r}
+boxplot.stats(dataset_phones$storage.GB)$out
+```
+
+The storage(GB) boxplot and statistical result illustrates that the range of the storage values are high (1GB - 512GB) and there's outliers detected by boxplot which are the values (256 GB and 512 GB) ,going back to the data these high storage values are not rare we cant consider them real outliers that need to be removed,but a minimum storage capacity observed is 1.0 GB considered to be an outlier and it will be preprocessed.
+
+```{r}
+boxplot(dataset_phones$battery , data = dataset_phones, xlab = "battery", ylab = "Frequancy")
+```
+
+```{r}
+boxplot.stats(dataset_phones$battery)$out
+```
+
+The battery boxplot and statistical result illustrates that majority of the phone batteries in the dataset are high in range there's a lot of outliers detected, they are estimated based on boxplot and will be preprocessed.
+
+```{r}
+boxplot(dataset_phones$price.USD. , data = dataset_phones, xlab = "price(USD)", ylab = "Frequancy")
+```
+
+```{r}
+boxplot.stats(dataset_phones$price.USD.)$out
+
+```
+
+The price(USD) boxplot and statistical result illustrates there's outliers detected way higher than the maximum phone price in the dataset that will be removed in preprocessing.
+
+```{r}
+boxplot(dataset_phones$ram.GB. , data = dataset_phones, xlab = "ram(GB)", ylab = "Frequancy")
+```
+
+```{r}
+boxplot.stats(dataset_phones$ram.GB.)$out
+
+```
+
+The ram(GB) boxplot and statistical result illustrate that these outliers need to be smoothed for accurate results.
+
+```{r}
+boxplot(dataset_phones$weight.g. , data = dataset_phones, xlab = "Weight(G)", ylab = "Frequancy")
+```
+
+```{r}
+boxplot.stats(dataset_phones$weight.g.)$out
+```
+
+The weight(G) boxplot and statistical result illustrate that the weight of phones is close in values ranged between (130.0 g and 500.0 g) and there is outliers that need to be preprocessed for accurate results
+
+```{r}
+boxplot(dataset_phones$inches , data = dataset_phones, xlab = "inches)", ylab = "Frequancy")
+```
+
+```{r}
+boxplot.stats(dataset_phones$inches)$out
+
+```
+
+The inches box plot and statistical result illustrate that the inches of phones ranged between(3.800 and 10.400) and processing is required for outliers.
+
+```{r}
+hist(dataset_phones$weight.g.)
+
+
+```
+
+The weight(g) histogram graph indicates an asymmetric right-skewed distribution of phone weights, with the majority of phone weights falling between (150g and 200g) and outliers that require preprocessing for dependable results.
+
+```{r}
+hist(dataset_phones$price.USD.)
+
+```
+
+The price(USD) histogram graph demonstrates a right-skewed distribution most phones less than \$500.
+
+```{r}
+hist(dataset_phones$battery)
+
+```
+
+The histogram illustrates that the distribution of phone batteries is generally symmetrical and that it falls within a normal range, which is between 2000 and 7000, with outliers that need to be smoothed out.
+
+```{r}
+hist(dataset_phones$storage.GB.)
+```
+
+The histogram illustrates that theres a variation in storage values ,and it also shows it has outliers that needs to be smoothed out.
+
+```{r}
+library(readr)
+library(ggplot2)
+ggplot(dataset_phones, aes(x =dataset_phones$battery_type , y = dataset_phones$price.USD.)) + 
+  geom_bar(stat = "identity")
+```
+
+the battery type and price(USD) bar plot illustrates that the majority of phone batteries of the type ( Li -- Po ) and it's the battery type that was most paid for.
+Although that (Li -- ion) has more advantages and is considered better, it wasn't used in many phones as the other battery type.
+
+```{r}
+with(dataset_phones, plot(dataset_phones$price.USD., dataset_phones$battery))
+```
+
+```{r}
+correlation <- cor(dataset_phones$battery, dataset_phones$price.USD.)
+print(correlation)
+```
+
+The scatter plot of the price(USD) and battery shows no meaningful linear relationship between the price and battery capacity ,changes in the price of a product are not associated with changes in the battery capacity in any consistent way.
+
+The correlation coefficient is very close to zero.
+This indicates that the attributes are independent ,But this could change when outliers are removed.
+
+```{r}
+with(dataset_phones, plot(dataset_phones$price.USD., dataset_phones$storage.GB.))
+
+```
+
+```{r}
+correlation <- cor(dataset_phones$storage.GB., dataset_phones$price.USD.)
+print(correlation)
+```
+
+The scatter plot and the measurements of correlation between price(USD) and storage(GB) suggests a relatively positive correlation.
+It's not close to 1, so the relationship between the variables is not very stronge.
+
+```{r}
+with(dataset_phones, plot(dataset_phones$ram.GB., dataset_phones$storage.GB.))
+```
+
+```{r}
+correlation <- cor(dataset_phones$storage.GB., dataset_phones$ram.GB.)
+print(correlation)
+
+```
+
+The scatter plot and correlation coefficient shows a strong positive relationship between the amount of storage(GB) and the amount of RAM(GB) .They rise togther, as storage capacity increases, the RAM capacity also tends to increase, and vice versa.
+
+having a strong positive correlation between two variables does not necessarily mean you should drop one of them, dropping one completely may not be ideal as they serve different purposes but including both storage and RAM as features can potentially improve the classification performance of our model.
+Even if these features are correlated, they might still contain unique information that is relevant for distinguishing between different classes.
+
+```{r}
+library(ggplot2)
+ggplot(dataset_phones, aes(x = brand)) +
+  geom_bar() +
+  labs(title = "Counts of Brands", x = "Brand", y = "Count")
+```
+
+xiaomi is the most brand produce mobiles and Google is the least.
+
+```{r}
+ggplot(dataset_phones, aes(x = os)) +
+  geom_bar() +
+  labs(title = "Counts of Operating Systems", x = "Operating System", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Android 11 and Android 10 is the most operating systems used in phones based on our data
+
+Based on the analysis of the operating systems graph, it is clear that the "OS"(operating system) column in our dataset contains various forms of noise.
+Some phones have unspecified operating system values such as "Android," while others have improperly formatted entries like "Android 10 / Android 11" or "Android 12 or 13." ,after rechecking the data the number of tuples that has this type of noise is small ,we fixed the phones that use the operating system "Android 10 / Android 11" or "Android 12 or 13." by replacing it with the latest operating system because we asume that the phone got updated ,and the phones that use the opearting system "Android" we replaced it by "Android 11" since its the most operating system used in our data.
+
+```{r}
+filtered_data <- dataset_phones[dataset_phones$os == 'Android 10/ Android 11', ]
+print(filtered_data)
+
+```
+
+```{r}
+filtered_data <- dataset_phones[dataset_phones$os == 'Android', ]
+print(filtered_data)
+```
+
+```{r}
+filtered_data <- dataset_phones[dataset_phones$os == 'Android 12 or 13', ]
+print(filtered_data)
+```
+
+```{r}
+dataset_phones[888,3]<-"Android 11"
+dataset_phones[1163,3]<-"Android 11"
+dataset_phones[1233,3]<-"Android 11"
+dataset_phones[1473,3]<-"Android 11"
+dataset_phones[1410,3]<-"Android 13"
+dataset_phones[1412,3]<-"Android 13"
+```
+
+```{r}
+barplot(table(dataset_phones$video_1080p))
+```
+
+The bar plot demonstrates that nearly all of the phones in our sample have a video resolution of 1080p, which is equivalent to a Full HD resolution.
+In essence, the resolution of a video or image tells you about the video's quality and how clear it is.
+As there are more pixels, a video with a higher resolution will contain images that are more clear and brighter.
+offering you higher video quality in the end.
+
+```{r}
+barplot(table(dataset_phones$video_480fps))
+```
+
+This bar graph illustrates that most phones lack 480fps video capabilities.
+The rate at which several frames appear within a second is known as the frame rate.
+480 FPS indicates that the camera is taking 480 frames or photos in a single second.
+When you shoot at 480 frames per second, the video will play 16 times slower.
+This frame rate is regarded as the foundation of super slow motion.
+This is common when demonstrating exceedingly quick movements.
+The phones in our sample are unable to record videos in slow motion at 480 frames per second, making it impossible to capture and display incredibly quick movements.
+
+```{r}
+phone_name_counts <- table(dataset_phones$phone_name)
+phone_name_counts_df <- as.data.frame(phone_name_counts)
+colnames(phone_name_counts_df) <- c("Phone Name", "Count")
+ head(phone_name_counts_df)
+```
+
+```{r}
+filtered_data <- dataset_phones[dataset_phones$phone_name == 'V30', ]
+print(filtered_data)
+```
+
+```{r}
+filtered_data <- dataset_phones[dataset_phones$phone_name == '9', ]
+print(filtered_data)
+```
+
+we noticed that there are many brands that has the same phone name.
+
+## preprocessing
+
+### dropping phone_name column
+
+```{r}
+dataset_phones <- dataset_phones[, !names(dataset_phones) %in% c("phone_name")]
+
+```
+
+"phone name" in our data is a unique identifier of the phone names as shown before and it don't carry meaningful information related to the predictive task that we are doing.
+
+### checking duplication after removing phone names
+
+```{r}
+num_duplicates <- sum(duplicated(dataset_phones))
+cat("Number of duplicate rows:", num_duplicates, "\n")
+```
+
+The removal of a unique identifier column might cause duplication but after rechecking our data the rows are not duplicated
+
+### we can extract announcement_year column from announcement_date column
+
+```{r}
+dataset_phones$announcement_date <- as.character(dataset_phones$announcement_date)
+ dataset_phones$announcement_year <- as.integer(sapply(strsplit(dataset_phones$announcement_date, '-'), function(x) x[1]))
+
+```
+
+We extracted the phones announcement year from the announcement_date column to make data simpler,high in consistency and more focused to the predictive task we are making, since the day and month of the phone's announcement is not relevant the prices of the phone
+
+### drop announcement_date
+
+```{r}
+dataset_phones <- dataset_phones[, !names(dataset_phones) %in% c("announcement_date")]
+```
+
+### extract hight and width from resoultion
+
+```{r}
+dataset_phones$width <- as.integer(sapply(strsplit(dataset_phones$resolution, "x"), "[[", 1))
+```
+
+```{r}
+dataset_phones$height <- as.integer(sapply(strsplit(dataset_phones$resolution, "x"), "[[", 2))
+
+```
+
+### droping resolution
+
+```{r}
+dataset_phones <- dataset_phones[, !names(dataset_phones) %in% c("resolution")]
+```
+
+we split the resolution column into height and width as it would help give more detailed information about each characteristic as well as it would enable numerical operations to be done and it is easier to filter, compare and understand the correlation between each of them and the price
+
+### checking for outliers in the new added attributes(width and height)
+
+```{r}
+boxplot(dataset_phones$width , data = dataset_phones, xlab = "width", ylab = "Frequancy")
+```
+
+```{r}
+boxplot(dataset_phones$height, data = dataset_phones, xlab =" height"
+        , ylab = "Frequancy")
+```
+
+```{r}
+boxplot.stats(dataset_phones$height)$out
+```
+
+```{r}
+boxplot.stats(dataset_phones$width)$out
+```
+
+only 2 phone with the width 3840 were dedicted and considerd outliers.
+
+## removing outliers
+
+```{r}
+
+library(dplyr)
+dataset_phones<- dataset_phones%>%
+    filter(price.USD.<=1750,
+           storage.GB. >= 8 & storage.GB. <= 512,
+           ram.GB. >= 5 & ram.GB.< 24,
+           battery >= 2500 & battery < 7000,
+           width>=480 & width<3840)
+
+```
+
+### Normalization
+
+```{r}
+normalize <- function(x) { return((x - min(x))/ (max(x) - min(x)))}
+dataset_phones$weight.g. <- normalize(dataset_phones$weight.g.) 
+dataset_phones$inches <- normalize(dataset_phones$inches)
+dataset_phones$battery <- normalize(dataset_phones$battery)
+dataset_phones$width <- normalize(dataset_phones$width)
+dataset_phones$height <- normalize(dataset_phones$height)
+dataset_phones$storage.GB. <- normalize(dataset_phones$storage.GB.)
+dataset_phones$ram.GB. <- normalize(dataset_phones$ram.GB.)
+```
+
+When features have significantly different scales, leading to biased results Normalization ensures that no single feature disproportionately influences the analysis.
+The attributes inches, weight, and battery were normalized and scaled to accept values between 0 and 1, where each of these qualities will have an equal weight.
+These two stages greatly simplify and help in handling the data.
+
+## Feature selection
+
+### measuring chi-square
+
+```{r}
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$phone_name)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$os)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$brand)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$battery_type)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_720p)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_1080p)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_4K)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_8K)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_30fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_60fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_120fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_240fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_480fps)
+print(result)
+result=chisq.test(dataset_phones$price.USD. , dataset_phones$video_960fps)
+print(result)
+
+
+result2=cor(dataset_phones$price.USD. ,dataset_phones$inches)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$battery)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$ram.GB.)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$weight.g.)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$storage.GB.)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$width)
+print(result2)
+result2=cor(dataset_phones$price.USD. ,dataset_phones$height)
+print(result2)
+```
+
+After looking at the results of chi-square we can see that from the nominal attributes (os) and from numerical attributes (width) represents the most important attribute that contributes to the price on the other hand the nominal attributes (video_1080p) and from numerical attributes (battery) is the least relevant to the price even though\
+it has a lower value but it still contributes to the price so we dont consider the need for feature selection .
+
+```{r}
+result=cor(dataset_phones$price.USD. ,dataset_phones$ram.GB.)
+print(result)
+result=cor(dataset_phones$price.USD. ,dataset_phones$weight.g.)
+print(result)
+result=cor(dataset_phones$price.USD. ,dataset_phones$width)
+print(result)
+result=cor(dataset_phones$price.USD. ,dataset_phones$height)
+print(result)
+result=cor(dataset_phones$price.USD. ,dataset_phones$inches)
+print(result)
+
+```
+
+the correlation of the attributes (ram,weight,width,height,inches)with the price shows that there is a positive relationship which mean that they will help in the classification process of the class lable which is price.
+
+### Descritisation and labeling price
+
+```{r}
+dataset_phones$price=cut (dataset_phones$price.USD., breaks=c(40,610, 1180, 2300), labels=c("cheap","affordable","expensive") )
+```
+
+our dataset was considered as regression so we decided to discretize the price column and add labels to the prices and divide them into 3 categories ("Cheap", " Affordable", and "Expensive") which would be more fitting, as well as it transformed our dataset from being regression into classification
+
+### dropping price.USD after labeling the data to build the classifier
+
+```{r}
+dataset_phones <- dataset_phones[, !names(dataset_phones) %in% c("price.USD.")]
+```
+
+### immbalance dataset
+
+```{r}
+
+ggplot(dataset_phones, aes(x = price)) +
+  geom_bar() +
+  labs(title = "Counts of price", x = "price", y = "Count")
+```
+
+based on the class lable plot it shows that our dataset is imbalanced and that will effect the classification task this will result in a significant impact on the performance of a classification model, the model may become biased towards the majority class (in this case, "cheap" items).
+It may focus more on learning how to classify the majority class accurately, often ignoring the minority classes.the model may perform well on the majority class but poorly on the minority classes and the accuracy will be misleading.
+
+### load the data after preprocessing to a CVS file(this data set will be used for classification and making decision tree only and it requires some attributes without encoding)
+
+```{r}
+write.csv(dataset_phones, file = "dataset_phones_classification.csv" ,row.names = FALSE)
+```
+
+### Encoding
+
+```{r}
+dataset_phones$video_720p=as.integer(as.logical(dataset_phones$video_720p))
+dataset_phones$video_1080p=as.integer(as.logical(dataset_phones$video_1080p))
+dataset_phones$video_4K=as.integer(as.logical(dataset_phones$video_4K))
+dataset_phones$video_8K=as.integer(as.logical(dataset_phones$video_8K))
+dataset_phones$video_30fps=as.integer(as.logical(dataset_phones$video_30fps))
+dataset_phones$video_60fps=as.integer(as.logical(dataset_phones$video_60fps))
+dataset_phones$video_120fps=as.integer(as.logical(dataset_phones$video_120fps))
+dataset_phones$video_240fps=as.integer(as.logical(dataset_phones$video_240fps))
+dataset_phones$video_480fps=as.integer(as.logical(dataset_phones$video_480fps))
+dataset_phones$video_960fps=as.integer(as.logical(dataset_phones$video_960fps))
+dataset_phones$battery_type=factor(dataset_phones$battery_type,levels = c("Li-Ion","Li-Po"),labels = c(0,1))
+```
+
+we noticed that there is logical attributes,and a character attribute with only two value only so we decided to encode the values so it will help simplify the data representation , also now after the encoding we can do calculations on the values.
+
+## Data after preprocessing
+
+```{r}
+summary(dataset_phones)
+
+```
+
+## CLASSIFICATION
+
+### laod packages
+
+```{r}
+install.packages("party")
+install.packages('caret')
+install.packages('ROSE')
+install.packages('rpart.plot')
+install.packages("C50")
+library(C50)
+library(printr)
+library(rpart)
+library(rpart.plot)
+library(party)
+library(caret)
+
+
+```
+
+### load the processed data
+
+```{r}
+dataset_phones_2 <- read.csv("dataset_phones_classification.csv" ,header = TRUE,sep=',', stringsAsFactors = T)
+```
+
+### converting to factor
+
+```{r}
+dataset_phones$announcement_year <- as.factor(dataset_phones_2$announcement_year)
+dataset_phones$battery_type <- as.factor(dataset_phones_2$battery_type)
+dataset_phones$video_720p <- as.factor(dataset_phones_2$video_720p)
+dataset_phones$video_1080p <- as.factor(dataset_phones_2$video_1080p)
+dataset_phones$video_4K <- as.factor(dataset_phones_2$video_4K)
+dataset_phones$video_8K <- as.factor(dataset_phones_2$video_8K)
+dataset_phones$video_30fps <- as.factor(dataset_phones_2$video_30fps)
+dataset_phones$video_60fps <- as.factor(dataset_phones_2$video_60fps)
+dataset_phones$video_120fps <- as.factor(dataset_phones_2$video_120fps)
+dataset_phones$video_240fps <- as.factor(dataset_phones_2$video_240fps)
+dataset_phones$video_480fps <- as.factor(dataset_phones_2$video_480fps)
+dataset_phones$video_960fps <- as.factor(dataset_phones_2$video_960fps)
+dataset_phones$brand <- as.factor(dataset_phones_2$brand)
+dataset_phones$os <- as.factor(dataset_phones_2$os)
+```
+
+## INFORMATION GAIN(ID3) (70% 30%)
+
+### stratified sampling
+
+since our dataset is imbalanced consisting of 944 cheap phones and only 25 expensive phones the use of holdout method for training set and testing set will cause a Poor generalization to minority Class which in our case the expensive phones.
+
+we used stratified sampling ('sample_frac(0.7)'), which ensures that each class in the 'price' column is represented proportionally in both the training and testing sets
+
+```{r}
+
+# the function(ctree) from package (party) used to measure information gain(ID) as a splitting criteria
+# Set the seed for reproducibility
+set.seed(123)
+
+# Create a row index column
+dataset_phones_2$row_index_column <- seq_len(nrow(dataset_phones_2))
+
+# Create training set with 70% of each class
+trainData <- dataset_phones_2 %>%
+  group_by(price) %>%
+  sample_frac(0.7) %>%
+  ungroup() %>%
+  sample_frac(1)  # Shuffle the rows
+
+# Create testing set with the remaining data
+testData <- anti_join(dataset_phones_2, trainData, by = "row_index_column")
+
+# Remove the temporary row index column
+dataset_phones_2$row_index_column <- NULL
+trainData$row_index_column <- NULL
+testData$row_index_column <- NULL
+
+summary(trainData$price)
+summary(testData$price)
+
+```
+
+### Decision tree
+
+```{r}
+
+# Define the formula for the decision tree
+myFormula <- price ~ brand+os +inches+battery+battery_type+ram.GB.+weight.g.+storage.GB.+ video_720p +video_1080p+video_4K+video_8K+ video_30fps+video_60fps+video_120fps+ video_240fps+ video_480fps+video_960fps+ announcement_year+width+height
+dataset_phones_c <- ctree(myFormula, data = trainData )
+plot(dataset_phones_c, type="simple")
+```
+
+We first started constructing the tree by using a 70 - 30 partition strategy,where 70% of the data was used for training the model, and the remaining 30% was reserved for evaluating its performance.
+The decision to use a 70-30 split is a commonly employed approach for finding a balance between having enough training data for the model to learn and having enough data to evaluate its generalization abilities.The root of the decision tree is the "width" feature, which has the highest information gain.
+This means that the model, during training, found "width" to be the most significant feature for splitting and making predictions
+
+In reality, relying solely on the width of a phone to classify its price would oversimplify the pricing process and likely lead to inaccurate predictions.
+To build a more accurate model for classifying phone prices, it would be necessary to consider a broader range of features and factors that are known to be influential in determining phone prices.
+
+### Confusion Matrix and Statistics
+
+```{r}
+testPred <- predict(dataset_phones_c, newdata = testData)
+results <- confusionMatrix(testPred, testData$price)
+print(results)
+```
+
+The overall accuracy is 86.07%.
+An overall accuracy of 86.07% in the decision tree model indicates a reasonably effective performance in making correct predictions across the dataset.
+
+The model's performance was evaluated using sensitivity and specificity values for each class.
+The "affordable" class had a sensitivity of 12.12%, indicating only 12.12% of positive instances were correctly identified(True Positives = 4).The model identified 96.55% of negative instances in this category.
+The "cheap" class had a sensitivity of 96.47%, indicating most of the positive instances were correctly identified,confusion matrix shows that the model has correctly predicted most of the instances of the "cheap" class (True Positives = 273) The "expensive" class had a sensitivity of 14.28%, indicating a small percent of positive instances were correctly identified.
+However, the model identified 99.36% negative instances as negative.
+These results highlight the model's effectiveness in identifying positive and negative instances.
+
+With a precision of 0.28 ,the model displayed low precision in recognizing positive instances in the "affordable" class.
+For the "cheap" of 0.89, the model shows strong precision, demonstrating its efficacy in accurately recognizing positive instances.
+Conversely, the "expensive" class's 0.33 accuracy value suggested that only a limited number of positive instances were expected.
+
+Overall, the analysis reveals that the decision tree model performs relatively well in predicting the "cheap" class, with high sensitivity and moderate precision.
+However, it struggles to accurately distinguish instances belonging to the "affordable" and "expensive" classes, as indicated by low sensitivities and relatively low precision for these classes.
+The model demonstrates high specificity for both the "affordable" and "expensive" classes, indicating its ability to correctly identify instances that do not belong to these classes.
+The overall balanced accuracy of the model is moderate, reflecting the average performance across all classes.
+
+### Avarage precision
+
+```{r}
+precision_Ava <- (0.2857 + 0.8922 + 0.3333) / 3
+cat("Avarage Precision :", precision_Ava, "\n")
+```
+
+### Creating a decision tree using the gain ratio(C5.0) as the splitting criterion
+
+### the algorithm (C5.0) from package C50 used to measure the gain ratio(using 70% and 30% partitioning) and its an improvements to C4.5 algorithm
+
+```{r}
+# Build a C5.0 decision tree
+dataset_phones_c <- C5.0(price ~ ., data = trainData)
+# Plot the decision tree (optional)
+plot(dataset_phones_c)
+```
+
+```{r}
+# Make predictions on the test set
+testPred <- predict(dataset_phones_c, newdata = testData)
+```
+
+### print tree rules
+
+```{r}
+summary(dataset_phones_c)
+```
+
+### Confusion Matrix and Statistics
+
+```{r}
+# Print accuracy
+results <- confusionMatrix(testPred, testData$price)
+results
+
+```
+
+```{r}
+precision_Ava <- (0.3333 + 0.8958 + 1) / 3
+cat("Avarage Precision :", precision_Ava, "\n")
+```
+
+The decision tree has "width" as the root attribute, chosen based on the highest gain ratio.
+This decision tree is requiring more splitting attributes than the previous one to classify a phone price with an 87% accuracy the metric measures are very related to the ID3 tree.
+
+For the class 'Affordable,' the model demonstrates a sensitivity (recall) of 15.15%, indicating a limited ability to correctly identify actual affordable phones.
+However, the specificity is high at 96.55%, showcasing proficiency in identifying phones that are not affordable.
+The positive predictive value (precision) for predicted affordable phones is 33.33%, suggesting room for improvement in accurately labeling phones as affordable.
+
+In the 'Cheap' class, the model excels with a high sensitivity of 97.17%, effectively identifying actual cheap phones.
+However, specificity is relatively low at 20.00%, indicating challenges in correctly identifying phones that are not cheap.
+The positive predictive value for predicted cheap phones is 89.58%, reflecting a strong accuracy in labeling phones as cheap.
+275 cheap phones out of the 283 cheap phones in the test was predicted correctly.
+
+In the 'Expensive' class, the model exhibits a sensitivity of 14.29%, implying a limited ability to identify actual expensive phones only one expensive phone was correctly predicted out of the 7 expensive phones in the test ,this shows that the model struggle in predicting expensive phones .
+, the specificity is at 100.00%, showcasing the model's proficiency in identifying phones that are not expensive.
+The positive predictive value for predicted expensive phones is 100.00%, indicating that when the model predicts an expensive phone, it is almost always correct.
+
+The classifier performs well in identifying cheap phones, with high sensitivity and precision for the "cheap" class this due the the majority of cheap phones in the training dataset.
+
+### GINI INDEX (CART)
+
+### the rpart function was used from package rpart to measure the gini index
+
+```{r}
+fit.tree = rpart(price ~ ., data=trainData, method = "class", cp=0.008)
+fit.tree
+```
+
+### plotting the tree
+
+```{r}
+rpart.plot(fit.tree)
+```
+
+Using the same partitioning strategy of 70-30, a decision tree was constructed based on the Gini index as the selection measure.
+The Gini index calculates the impurity or uncertainty at each node, and the attribute with the lowest Gini index is chosen as the splitting criterion.
+This measure helps in identifying the attributes that provide the most significant information gain and result in higher purity in the resulting subsets.
+
+The decision tree utilized the "Width" attribute as the initial splitting criterion, selected due to its lowest Gini index value among the candidate attributes.
+Additional splitting criteria, such as "Brand," "operating system," and "Weight," were chosen based on their respective Gini index values.
+This approach aimed to create splits that maximize the purity of the resulting subsets and improve the model's ability to classify instances accurately.
+
+Similar to the decision tree constructed using information gain, the Gini index-based decision tree classified the instances into the "expensive" class but in small number
+
+### Confusion Matrix and Statistics
+
+```{r}
+
+pred.tree = predict(fit.tree, testData, type = "class")
+results <- confusionMatrix(pred.tree, testData$price)
+print(results)
+```
+
+### Avarage precision
+
+```{r}
+precision_Ava <- (0.2000 + 0.8961 + 0.4000) / 3
+cat("Avarage Precision :", precision_Ava, "\n")
+```
+
+The Gini index-based decision tree achieved an accuracy of 86.69%.
+Accuracy measures the overall correctness of the model's classifications, indicating that 86.69% of the instances were correctly classified.
+
+To evaluate the model's performance, sensitivity and specificity values were calculated for each class.
+For the "affordable" class, the model exhibited higher specificity (97.24%) than sensitivity (6.06%).
+This implies that the model is better at correctly identifying instances that belong to the negative class for this category, but it struggles to accurately identify instances that belong to the positive class.
+The model tends to be more conservative in labeling instances as positives for the "affordable" class.
+In the case of the "cheap" class, the model demonstrated excellent sensitivity (97.53%) in correctly identifying instances that belong to the positive class.
+However, its specificity (20%) was relatively low, indicating that the model is prone to false positives and struggles to accurately identify instances that belong to the negative class for this category.
+For the "expensive" class, the model exhibited very high specificity (99.05%) in correctly identifying instances that belong to the negative class.
+However, its sensitivity (28.57%), indicating that the model identified a low percent of instances that belong to the positive class for this category.
+
+The precision represents the proportion of instances predicted as positive (true positives) that are actually positive.
+The precision for the "affordable," "cheap," and "expensive" classes are 0.20, 0.89, and 0.40, respectively.
+This indicates that among the instances predicted as positive, the model performs relatively well in identifying true positives for the "cheap" class but has limitations in the "affordable" and "expensive" classes.
+
+In summary, the decision tree constructed using the Gini index demonstrates moderate overall accuracy.
+It performs well in classifying instances as "cheap," with high sensitivity and precision.
+However, it struggles to accurately classify instances in the "affordable" and "expensive" classes, as evidenced by low sensitivity, specificity, and positive predictive value values for these classes.
+
+The gain ratio tree performed slightly better in correctly classifying instances compared to both the ID3 and Gini index trees in the 70 - 30 partition, as it had the highest overall accuracy among the three models.
+However, the difference in accuracy between the models is relatively small, suggesting that their performance is comparable and the gain ratio tree shows a slightly higher level of accuracy in this scenario.
+
+##information gain (80% - 20%)
+
+```{r}
+
+# the function(ctree) from package (party) used to measure information gain(ID) as a splitting criteria
+# Set the seed for reproducibility
+set.seed(123)
+
+# Create a row index column
+dataset_phones_2$row_index_column <- seq_len(nrow(dataset_phones_2))
+
+# Create training set with 80% of each class
+trainData <- dataset_phones_2 %>%
+  group_by(price) %>%
+  sample_frac(0.8) %>%
+  ungroup() %>%
+  sample_frac(1)  # Shuffle the rows
+
+# Create testing set with the remaining data
+testData <- anti_join(dataset_phones_2, trainData, by = "row_index_column")
+
+# Remove the temporary row index column
+dataset_phones_2$row_index_column <- NULL
+trainData$row_index_column <- NULL
+testData$row_index_column <- NULL
+
+
+summary(trainData$price)
+summary(testData$price)
+
+```
+
+### Decision tree
+
+```{r}
+myFormula <- price ~ brand + os + inches + battery+ battery_type+ ram.GB.+ weight.g.+storage.GB.+ video_720p + video_60fps+ video_1080p+ video_30fps+ video_480fps+video_240fps+video_120fps+ video_960fps+ video_4K+video_8K +announcement_year+width+height
+phones_ctree <- ctree(myFormula, data=trainData)
+plot(phones_ctree)
+testPred <- predict(phones_ctree, newdata = testData)
+results <- confusionMatrix(testPred, testData$price)
+print(results)
+
+```
+
+The second partition strategy, we used 80 - 20 split where 80% of the data was used for training the model and 20% for testing its performance.
+This split provides sufficient training data for effective model learning, striking a balance to avoid overfitting and ensuring computational efficiency.
+
+In the constructed decision tree, the splitting attribute at the root level was the "Width" attribute, chosen because it has the highest information gain.
+The subsequent splitting criteria at the second level were determined by the conditions of the "video 8k" attribute and the "Video 30fps" attribute, depending on whether the width of the phone was smaller or larger than 0.365.
+Finally, the last level of splitting criteria involved the "brand" attribute.
+
+The data used to train the model showed an unbalanced distribution, as can be seen by examining the decision tree and confusion matrix.
+This class imbalance can impact the model's performance and may lead to biased results, particularly for the minority classes ("affordable" and "expensive").
+
+The majority of instances were classified into the "cheap" class, and only 3 instances classified as "affordable." Notably, the tree did not classify any instances as "expensive" due to the overwhelming prevalence of the "cheap" class in the data set and the test data only contained 5 instances which made it harder to classify the expensive class.This limited representation of the "expensive" class in the test data might explain why the decision tree did not classify any instances as "expensive" in this particular evaluation
+
+The overall accuracy of the decision tree was calculated to be 87.96%, which is slightly higher than the accuracy of the 70-30 ID3 tree.
+This indicates that the decision tree model is performing reasonably well in terms of overall accuracy.
+However, it is important to note that accuracy alone may not provide a complete picture of the model's performance, especially when dealing with imbalanced data.
+
+The model's performance is assessed through sensitivity and specificity values for distinct classes.
+In the "affordable" class, the model demonstrates a sensitivity of 13.63%, accurately identifying 13.63% of actual positive instances, while achieving a high specificity of 98.45%, signifying precision in recognizing actual negative instances.
+Conversely, for the "cheap" class, the model excels with a 98.94% sensitivity, correctly identifying high number of actual positives, but struggles with a specificity of 14.81%, indicating challenges in pinpointing actual negatives.
+In the case of the "expensive" class, the model shows a 0% sensitivity, implying difficulty in identifying positive instances, paired with a 100% specificity, showcasing accuracy in recognizing negatives.
+These sensitivity and specificity metrics offer a detailed perspective on the model's strengths and weaknesses across different classes.
+
+The precision values provide insights into the model's ability to make correct positive predictions for each class.
+The precision for the "affordable" class is 0.5, indicating that when the model predicts an instance as "affordable," it is correct 50% of the time.
+The precision for the "cheap" class is 0.8905, indicating a higher accuracy in predicting instances as "cheap." However, the precision for the "expensive" class is NaN, suggesting that the model does not make correct positive predictions for this class.
+
+The decision tree demonstrates reasonably good overall accuracy but faces challenges in correctly classifying instances for certain classes.
+The values for specificity, sensitivity and precision provide insight into how well the model performs for each class.
+
+```{r}
+precision_Ava <- (0.5000 + 0.8905 ) / 2
+cat("Avarage Precision :", precision_Ava, "\n")
+```
+
+### Creating a decision tree using the gain ratio(C5.0) as the splitting criterion
+
+### the function (C5.0) from package C50 used to measure the gain ratio(using 80% and 20% partitioning)
+
+```{r}
+# Build a C5.0 decision tree
+dataset_phones_c <- C5.0(price ~ ., data = trainData)
+```
+
+```{r}
+# Plot the decision tree 
+plot(dataset_phones_c)
+```
+
+```{r}
+# Make predictions on the test set
+testPred <- predict(dataset_phones_c, newdata = testData)
+```
+
+### Decision tree rules
+
+```{r}
+summary(dataset_phones_c)
+```
+
+### Confusion Matrix and Statistics
+
+```{r}
+# Print accuracy
+results <- confusionMatrix(testPred, testData$price)
+results
+
+```
+
+### Avarage percision
+
+```{r}
+precision_Ava <- (0.23077 + 0.9010 + 0.0000) / 3
+cat("Avarage Precision :", precision_Ava, "\n")
+```
+
+The decision tree is constructed with the "width" attribute as the root, selected based on the highest gain ratio measured by the algorithm.
+The model exclusively utilizes the width of the phone to categorize prices.
+accuracy (85.6%), it demonstrates limitations, particularly in accurately identifying "affordable" and "expensive" phones.
+
+Class "Affordable":
+
+Sensitivity (Recall): 13.64% - The model identifies only 13.64% of the actual affordable phones, indicating a low ability to correctly identify them 19 out of 22 affordable phones in test were classified as cheap .
+Specificity: 94.85% - The model is good at correctly identifying phones that are not affordable, with a high specificity.
+Positive Predictive Value (Precision): 23.08% - Among the predicted affordable phones, only 23.08% are actually affordable, suggesting a relatively low precision.
+
+Class "Cheap":
+
+Sensitivity (Recall): 96.30% - The model has a high ability to correctly identify cheap phones among all actual cheap phones.
+Specificity: 25.93% - The model is not very good at correctly identifying phones that are not cheap, with a relatively low specificity.
+Positive Predictive Value (Precision): 90.10% - Among the predicted cheap phones, 90.10% are actually cheap, indicating a high precision.
+
+Class "Expensive":
+
+Sensitivity (Recall): 0.00% - The model does not identify any of the actual expensive phones, most of the expensive phones in the test data were classified as affordable, suggesting a complete failure to detect this class.
+Specificity: 99.53% ,The model is excellent at correctly identifying phones that are not expensive, with high specificity.
+Positive Predictive Value (Precision): 0.00% - Among the predicted expensive phones, none are actually expensive, indicating a lack of precision.
+
+this classifier has the lowest average precision among the classifier built.
+
+### GINI INDEX (CART)
+
+### the rpart function was used from package rpart to measure the gini index
+
+```{r}
+fit.tree = rpart(price ~ ., data=trainData, method = "class", cp=0.008)
+fit.tree
+```
+
+### plotting the tree
+
+```{r}
+rpart.plot(fit.tree)
+```
+
+The decision tree constructed using the Gini index as the selection measure and a partitioning strategy of 80-20 focused on identifying instances classified as "cheap" rather than the "expensive" and "affordable" instances.
+This observation highlights the imbalanced nature of the dataset, with the majority of instances falling into the "cheap" category.
+The decision tree selected splitting criteria, such as "Width," "Brand," "Height," and "Weight," based on their respective Gini index values.
+
+### Confusion matrix
+
+```{r}
+pred.tree = predict(fit.tree, testData, type = "class")
+```
+
+```{r}
+results <- confusionMatrix(pred.tree, testData$price)
+print(results)
+```
+
+### Avarage percision
+
+```{r}
+precision_Ava <- (0.2727 + 0.9109 + 0.3333) / 3
+cat("Avarage Precision :", precision_Ava, "\n")
+```
+
+Based on the confusion matrix, the decision tree identified only one instance correctly as "expensive" and three instances correctly as "affordable." The majority of instances, however, were classified as "cheap." This observation further emphasizes the imbalanced nature of the dataset, where the "cheap" class is overrepresented compared to the "expensive" and "affordable" classes.
+The decision tree's focus on classifying instances as "cheap" is evident from the high number of instances correctly identified in that class (184 instances).
+However, the limited number of correctly classified instances in the "expensive" and "affordable" classes (one instance each) suggests that the decision tree struggled to accurately identify instances belonging to those classes.
+This imbalance in the dataset likely influenced the decision tree's prioritization of classifying instances as "cheap" rather than effectively distinguishing between the "expensive" and "affordable" classes.
+
+The Gini index-based decision tree achieved an accuracy of 87.04%, slightly lower than the accuracy of the ID3 tree.
+Accuracy measures the overall correctness of the model in classifying instances, indicating that 87.04% of the instances were classified correctly.
+Although the accuracy is slightly lower compared to the ID3 tree, it still represents a reasonably high level of accuracy.
+
+The decision tree's performance can be evaluated based on Sensitivity, Specificity, and Precision.
+For the "affordable" class, the Sensitivity is 0.13636, indicating that only 13.64% of instances belonging to this class were correctly identified.
+The Specificity for the "affordable" class is 0.95876, meaning that the decision tree accurately identified affordable instances 95.88% of the time.
+The Precision, for the "affordable" class is 0.27273, indicating that around 27.27% of instances predicted as "affordable" were truly in that class.
+For the "cheap" class, the Sensitivity is high at 0.9735, indicating that the decision tree successfully identified 97.35% of instances belonging to this class.
+However, the Specificity is low at 0.3333, suggesting that the decision tree struggled to accurately identify instances not belonging to the "cheap" class.
+The Precision for the "cheap" class is 0.9109, indicating that around 91.09% of instances predicted as "cheap" were truly in that class.
+For the "expensive" class, the Sensitivity is 0.20000, indicating that only 20% of instances belonging to this class were correctly identified.
+The Specificity is high at 0.99052, suggesting that the decision tree accurately identified instances not belonging to the "expensive" class 99.05% of the time.
+The Precision for the "expensive" class is 0.33333, indicating that around 33.33% of instances predicted as "expensive" were truly in that class.
+
+In summary, the decision tree constructed using the Gini index and an 80-20 partitioning strategy focused primarily on identifying instances classified as "cheap" rather than "expensive" or "affordable." This indicates an imbalance in the dataset, with the majority of instances falling into the "cheap" category.
+The decision tree achieved an accuracy of 87.04%, slightly lower than the ID3 tree.
+However, the tree struggled to accurately classify instances as "expensive" and "affordable," correctly identifying only one instance in each class.
+The imbalanced dataset influenced the tree's prioritization of the "cheap" class.
+Sensitivity, specificity, and precision measures further revealed the tree's challenges in correctly classifying instances across all classes.
+Despite these limitations, the accuracy remained reasonably high.
+
+##information gain (60% - 40%)
+
+```{r}
+
+# the function(ctree) from package (party) used to measure information gain(ID) as a splitting criteria
+# Set the seed for reproducibility
+set.seed(123)
+
+# Create a row index column
+dataset_phones_2$row_index_column <- seq_len(nrow(dataset_phones_2))
+
+# Create training set with 60% of each class
+trainData <- dataset_phones_2 %>%
+  group_by(price) %>%
+  sample_frac(0.6) %>%
+  ungroup() %>%
+  sample_frac(1)  # Shuffle the rows
+
+# Create testing set with the remaining data
+testData <- anti_join(dataset_phones_2, trainData, by = "row_index_column")
+
+# Remove the temporary row index column
+dataset_phones_2$row_index_column <- NULL
+trainData$row_index_column <- NULL
+testData$row_index_column <- NULL
+
+summary(trainData$price)
+summary(testData$price)
+```
+
+### Decision tree
+
+```{r}
+myFormula <- price ~ brand + os + inches + battery+ battery_type+ ram.GB.+ weight.g.+storage.GB.+ video_720p + video_60fps+ video_1080p+ video_30fps+ video_480fps+video_240fps+video_120fps+ video_960fps+ video_4K+video_8K +announcement_year+width+height
+phones_ctree <- ctree(myFormula, data=trainData)
+table(predict(phones_ctree), trainData$price)
+print(phones_ctree)
+plot(phones_ctree)
+```
+
+For the last partition strategy, we used 60 - 40 split where 60% of the data was used for training the model and 40% for testing its performance.
+By using a larger training set (60%), the model has access to more instances to learn from.
+This can potentially help the model capture patterns and relationships in the data more effectively.
+
+The decision tree was constructed with the "Width" attribute as the splitting attribute at the root level, chosen for its high information gain.
+At the second level, the splitting criteria were determined by the conditions of the "Video 8k" attribute, based on the width of the phone, while the last level incorporated the "Brand" attribute.
+
+However, despite the large testing set, the decision tree did not classify any instances into the "expensive" and "affordable" classes.
+This suggests that the "expensive" and "affordable" class is underrepresented in the dataset, with a majority of instances labeled as "cheap." Imbalanced datasets can pose challenges for decision trees, as they may prioritize classifying instances into the more prevalent classes, leading to difficulties in accurately predicting the minority class.
+The small size of the dataset might have also limited the model's ability to effectively capture the complexity of the "expensive" and "affordable" class.
+
+### Confusion Matrix and Statistics
+
+```{r}
+testPred <- predict(phones_ctree, newdata = testData)
+results <- confusionMatrix(testPred, testData$price)
+print(results)
+
+```
+
+### Avarage percision
+
+```{r}
+precision_Ava <- (0.0000 + 0.8758 ) / 2
+cat("Avarage Precision :", precision_Ava, "\n")
+```
+
+The accuracy of 86.57% indicates that the decision tree correctly classified approximately 86.57% of the instances in the dataset, which is relatively good overall.
+
+Analyzing the sensitivity and specificity values for different classes provides further insights into the model's performance.
+In the "affordable" class, the model had a sensitivity of 0%, correctly identifying none of the actual positive instances, and a high specificity of 98.71%, indicating precision in recognizing actual negatives.
+For the "cheap" class, the model achieved a 98.94% sensitivity, accurately identifying all actual positive instances, but struggled with a specificity of 1.85%, suggesting challenges in identifying actual negatives.
+In the case of the "expensive" class, the model had a sensitivity of 0%, implying difficulty in identifying positive instances, but achieved a specificity of 100%, indicating accuracy in recognizing negatives.
+
+These sensitivity and specificity metrics offer a detailed understanding of the model's strengths and weaknesses across different classes, highlighting its ability to accurately classify instances within certain classes while exposing areas for improvement, particularly in the sensitivity of the "expensive" class.
+
+The precision of the model in predicting the "affordable" class is 0%, indicating that none of the instances predicted as "affordable" were actually positive.
+However, the precision for predicting the "cheap" class is relatively high at 87.58%, indicating the model's effectiveness in identifying "cheap" instances.
+It's important to note that the precision for predicting the "expensive" class is undefined, indicating that there were no true positives predicted for this class.
+
+In summary, the model shows limitations in correctly classifying instances for the "affordable" and "expensive" classes.
+It performs well in terms of sensitivity and specificity for the "cheap" class, but struggles with specificity for correctly identifying negative instances.
+The lack of positive predictions for the "expensive" class indicates a failure to recognize positive instances in this class.
+
+It's important to note that the results may be influenced by the class distribution within the dataset and the specific characteristics of the data used for training and testing.
+Class imbalance and limited representation of certain classes can impact the model's performance and contribute to biased results.
+
+### Creating a decision tree using the gain ratio(C5.0) as the splitting criterion
+
+### the function (C5.0) from package C50 used to measure the gain ratio(using 60% and 40% partitioning)
+
+```{r}
+# Build a C5.0 decision tree
+dataset_phones_c <- C5.0(price ~ ., data = trainData)
+```
+
+```{r}
+# Plot the decision tree 
+plot(dataset_phones_c)
+```
+
+```{r}
+# Make predictions on the test set
+testPred <- predict(dataset_phones_c, newdata = testData)
+```
+
+### Print the decision rules
+
+```{r}
+summary(dataset_phones_c)
+```
+
+```{r}
+# Print accuracy
+results <- confusionMatrix(testPred, testData$price)
+results
+
+```
+
+### Avarage percision
+
+```{r}
+precision_Ava <- (0.2352 + 0.8970 ) / 2
+cat("Avarage Precision :", precision_Ava, "\n")
+```
+
+The decision tree employs the "width" attribute as the root, chosen based on the highest gain ratio measured by the algorithm.the accuracy of the classifier 84% ,the model struggles to classify expensive and affordable phones,
+
+Class "Affordable":
+
+Sensitivity (Recall): 18.18% - The model identifies only 18.18% of the actual affordable phones, indicating a relatively low ability to correctly identify them.
+Specificity: 93.30% - The model is good at correctly identifying phones that are not affordable, with a high specificity.
+Positive Predictive Value (Precision): 23.53% - Among the predicted affordable phones, only 23.53% are actually affordable.
+It suggests a relatively low precision.
+
+Class "Cheap":
+
+Sensitivity (Recall): 94.44% - The model has a high ability to correctly identify cheap phones among all actual cheap phones.
+Specificity: 24.07% - The model is not very good at correctly identifying phones that are not cheap, with a relatively low specificity.
+Positive Predictive Value (Precision): 89.70% - Among the predicted cheap phones, 89.70% are actually cheap, indicating a high precision.
+
+The sensitivity and specificity values further highlight the model's strengths and weaknesses for each class.
+For instance, while the model demonstrates perfect sensitivity for "cheap" phones, it struggles with "affordable" and "expensive" phones .
+
+Class "Expensive":
+
+Sensitivity (Recall): 0.00% - The model does not identify any of the actual expensive phones, suggesting a complete failure to detect this class 5 out of the 10 expensive phones in test set were classified as affordable and the other 5 classified as cheap.
+Specificity: 100.00% - The model is excellent at correctly identifying phones that are not expensive, with high specificity.
+Positive Predictive Value (Precision): NaN (Not a Number) - Precision is undefined when there are no true positive predictions.
+In this case, the model did not predict any instances as expensive.
+
+### Gini index
+
+## classifiaction tree:
+
+```{r}
+fit.tree = rpart(price ~ ., data=trainData, method = "class", cp=0.008)
+fit.tree
+```
+
+```{r}
+rpart.plot(fit.tree)
+```
+
+Using the same 60-40 partitioning strategy, a decision tree was constructed using the Gini index as the selection measure.
+
+The decision tree utilized the "Width" attribute as the initial splitting criterion, selected for its lowest Gini index value among the candidate attributes.
+Additional splitting criteria, including "Operating System," and "height," were chosen based on their respective Gini index values.
+
+```{r}
+pred.tree = predict(fit.tree, testData, type = "class")
+```
+
+### Confusion Matrix and Statistics
+
+```{r}
+
+results <- confusionMatrix(pred.tree, testData$price)
+print(results)
+```
+
+### Avarage percision
+
+```{r}
+precision_Ava <- (0.2352 + 0.8970 ) / 2
+cat("Avarage Precision :", precision_Ava, "\n")
+```
+
+The Gini index-based decision tree achieved an accuracy of 84.26%, which is lower than the accuracy of the ID3 tree.
+The lower accuracy can be attributed to the tree's struggle in identifying instances of the expensive class.
+This difficulty in accurately classifying expensive instances likely contributed to the overall decrease in accuracy.
+The Gini index-based decision tree might have faced challenges in capturing the complex patterns and characteristics associated with the expensive class, resulting in misclassifications and a lower overall accuracy compared to the ID3 tree.
+
+The limitations faced by the decision tree in identifying instances of the expensive class can be attributed to imbalanced data and the partition strategy.
+
+The statistics presented for each class provide additional insights into the model's performance for specific categories.
+The sensitivity (also called recall or true positive rate) for the "affordable" class is 0.18182, indicating that only 18.18% of the actual "affordable" instances were correctly classified.
+The specificity (true negative rate) for the "affordable" class is 93.94% , meaning that the model performed well in identifying instances that were not "affordable." For the "cheap" class, the sensitivity is 94.08% , indicating a high level of correct predictions, while the specificity is 24.07% , suggesting a higher rate of false positives.
+The sensitivity and specificity for the "expensive" class are both 0, suggesting that the model did not correctly classify any instances as "expensive" in the given dataset.
+The positive predictive value (precision) is provided for the "affordable" and "cheap" classes, but it is not available for the "expensive" class due to the absence of true positive predictions.
+
+The precision is given for the "affordable" and "cheap" classes but not for the "expensive" class due to the absence of true positive predictions for that class.
+For the "affordable" class, the precision is calculated as 0.22857.
+This means that out of all instances predicted as "affordable" by the model, only approximately 22.86% of them are actually true positives.
+In other words, when the model predicts an instance as "affordable," it is correct only about 22.86% of the time.
+For the "cheap" class, the precision is given as 0.8967.
+This indicates that when the model predicts an instance as "cheap," it is correct approximately 89.67% of the time.
+This suggests a higher level of precision for the "cheap" class compared to the "affordable" class.
+
+### classification metrics table and findings:
+
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><p></p></th>
+<th><p><u><em><strong>70% training set 30% test set</strong></em></u></p>
+<p><em><strong>ID3</strong></em></p></th>
+<th><p>Gain ratio</p></th>
+<th><p>GINI INDEX</p></th>
+<th><p><u>80% training set 20% testing set</u></p>
+<p>ID3</p></th>
+<th><p>Gain ratio</p></th>
+<th><p>Gini index</p></th>
+<th><p><u>60% training set 40% testing set</u></p>
+<p>ID3</p></th>
+<th><p>Gain ratio</p></th>
+<th><p>Gini index</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>Accuracy</p></td>
+<td><p>86.07%</p></td>
+<td><p>87%</p></td>
+<td><p>86.69%</p></td>
+<td><p>87.96%</p></td>
+<td><p>85.65%</p></td>
+<td><p>87.04%</p></td>
+<td><p>86.57%</p></td>
+<td><p>84.49%</p></td>
+<td><p>84.26%</p></td>
+</tr>
+<tr class="even">
+<td><p>precision</p>
+<p><strong>afforadble</strong></p></td>
+<td><p>28.57%</p></td>
+<td><p>33.33%</p></td>
+<td><p>20%</p></td>
+<td><p>50%</p></td>
+<td><p>23.08%</p></td>
+<td><p>27.27%</p></td>
+<td><p>0%</p></td>
+<td><p>23.53%</p></td>
+<td><p>22.85%</p></td>
+</tr>
+<tr class="odd">
+<td><p>precision</p>
+<p><strong>cheap</strong></p></td>
+<td><p>89.22%</p></td>
+<td><p>89.58%</p></td>
+<td><p>89.61%</p></td>
+<td><p>89.05%</p></td>
+<td><p>90.10%</p></td>
+<td><p>91.09%</p></td>
+<td><p>87.58%</p></td>
+<td><p>89.70%</p></td>
+<td><p>89.67%</p></td>
+</tr>
+<tr class="even">
+<td><p>precision</p>
+<p><strong>expensive</strong></p></td>
+<td><p>33.33%</p></td>
+<td><p>100%</p></td>
+<td><p>40%</p></td>
+<td><p>Nan</p></td>
+<td><p>0%</p></td>
+<td><p>33.33%</p></td>
+<td><p>Nan</p></td>
+<td><p>Nan</p></td>
+<td><p>Nan</p></td>
+</tr>
+<tr class="odd">
+<td><p>sensitivity</p>
+<p><strong>affordable</strong></p></td>
+<td><p>12.12%</p></td>
+<td><p>15.15%</p></td>
+<td><p>6.06%</p></td>
+<td><p>13.63%</p></td>
+<td><p>13.64%</p></td>
+<td><p>13.63%</p></td>
+<td><p>0%</p></td>
+<td><p>18.18%</p></td>
+<td><p>18.18%</p></td>
+</tr>
+<tr class="even">
+<td><p>sensitivity</p>
+<p><strong>cheap</strong></p></td>
+<td><p>96.47%</p></td>
+<td><p>97.17%</p></td>
+<td><p>97.53%</p></td>
+<td><p>98.94%</p></td>
+<td><p>96.30%</p></td>
+<td><p>97.35%</p></td>
+<td><p>98.94%</p></td>
+<td><p>94.44%</p></td>
+<td><p>94.18%</p></td>
+</tr>
+<tr class="odd">
+<td><p>sensitivity</p>
+<p><strong>expensive</strong></p></td>
+<td><p>14.28%</p></td>
+<td><p>14.28%</p></td>
+<td><p>28.57%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>20%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="even">
+<td><p>specificity</p>
+<p><strong>affordable</strong></p></td>
+<td><p>96.55%</p></td>
+<td><p>96.55%</p></td>
+<td><p>97.24%</p></td>
+<td><p>98.45%</p></td>
+<td><p>94.84%</p></td>
+<td><p>95.87%</p></td>
+<td><p>98.71%</p></td>
+<td><p>93.30%</p></td>
+<td><p>93.04%</p></td>
+</tr>
+<tr class="odd">
+<td><p>specificity</p>
+<p><strong>cheap</strong></p></td>
+<td><p>17.50%</p></td>
+<td><p>20%</p></td>
+<td><p>20%</p></td>
+<td><p>14.81%</p></td>
+<td><p>25.93%</p></td>
+<td><p>33.33%</p></td>
+<td><p>1.85%</p></td>
+<td><p>24.07%</p></td>
+<td><p>24.07%</p></td>
+</tr>
+<tr class="even">
+<td><p>specificity</p>
+<p><strong>expensive</strong></p></td>
+<td><p>99.36%</p></td>
+<td><p>100%</p></td>
+<td><p>99.05%</p></td>
+<td><p>100%</p></td>
+<td><p>99.53%</p></td>
+<td><p>99.05%</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+</tr>
+</tbody>
+</table>
+
+
+
+In our evaluation of the classification models, specifically using Decision Trees, we conducted experiments with different partitioning ratios (70%-30%, 80%-20%, and 60%-40%) and various splitting criteria (ID3, C5.0, and CART).
+
+
+### results obtained using 70%-30% partition:
+(the best tree in this partitioning is achived using using the ration(c5.0) algorithm with an 87% accuracy)
+### using the Information gain(ID3) algorithm:
+
+The decision tree model achieved an overall accuracy of 86.07%, showcasing effective predictive performance across the dataset. Notably, the model excelled in accurately predicting instances of the "cheap" class, demonstrating high sensitivity (96.47%) and precision (0.89). However, challenges were evident in distinguishing instances belonging to the "affordable" and "expensive" classes, with low sensitivities (12.12% and 14.28%, respectively) and relatively lower precision for these classes (0.28 and 0.33, respectively). The model's strength lies in its high specificity for both "affordable" and "expensive" classes, indicating its proficiency in correctly identifying instances not belonging to these classes. The overall balanced accuracy, while moderate, reflects a satisfactory average performance across all classes, emphasizing the model's effectiveness in certain categories while acknowledging areas for improvement in handling specific class distinctions.
+
+### using the ration(c5.0) algorithm:
+
+
+The decision tree, with "width" as the root attribute chosen for its high gain ratio, achieves an accuracy of 87%. Notably, it demands more splitting attributes than its predecessor. For the 'Affordable' class, the model exhibits a sensitivity of 15.15%, indicating a limited ability to correctly identify actual affordable phones. However, it demonstrates high specificity at 96.55%, proficiently identifying phones that are not affordable. The precision for predicted affordable phones is 33.33%, suggesting room for improvement. In the 'Cheap' class, the model excels with a 97.17% sensitivity, effectively identifying actual cheap phones, but faces challenges in specificity (20.00%). Nevertheless, the positive predictive value is strong at 89.58%, reflecting accurate labeling of phones as cheap. For the 'Expensive' class, the model struggles with sensitivity (14.29%) but excels in specificity (100.00%) and positive predictive value (100.00%), indicating proficiency in correctly identifying phones that are not expensive. Overall, the classifier performs well in identifying cheap phones, benefiting from the majority representation of cheap phones in the training dataset.
+
+
+### using the Gini Index algorithm:
+
+The Gini index-based decision tree achieved an accuracy of 86.69%, indicating that 86.69% of instances were correctly classified. Sensitivity and specificity values were used to evaluate performance for each class. In the "affordable" class, the model exhibited higher specificity (97.24%) than sensitivity (6.06%), suggesting conservatism in labeling positives. For the "cheap" class, the model excelled in sensitivity (97.53%) but struggled with specificity (20%), prone to false positives. The "expensive" class showed very high specificity (99.05%) but lower sensitivity (28.57%).
+
+Precision values for "affordable," "cheap," and "expensive" classes were 0.20, 0.89, and 0.40, respectively. The model performed well in identifying true positives for "cheap" but faced limitations in the "affordable" and "expensive" classes.
+
+In summary, the Gini index tree demonstrated moderate accuracy, excelling in classifying "cheap" instances but struggling with "affordable" and "expensive" classes. Comparatively, the gain ratio tree performed slightly better in overall accuracy than both the ID3 and Gini index trees in a 70-30 partition, though the difference is small, indicating comparable performance across the models.
+
+### results obtained using 80%-20% partition:
+(the best tree in this partitioning is achived using using the Information gain(ID3) algorithm with an 87.96% accuracy)
+
+### using the Information gain(ID3) algorithm:
+
+
+The decision tree achieved an overall accuracy of 87.96%, slightly higher than the 70-30 ID3 tree. While this suggests reasonable overall performance, the class imbalance warrants a deeper evaluation. Sensitivity and specificity values were crucial for assessing distinct class performance. In the "affordable" class, the model showed a sensitivity of 13.63% and high specificity (98.45%). For the "cheap" class, a 98.94% sensitivity contrasted with a low specificity of 14.81%, revealing challenges in identifying actual negatives. The "expensive" class displayed 0% sensitivity and 100% specificity.
+
+Precision values further highlighted the model's ability to make correct positive predictions. A precision of 0.5 for "affordable" suggests accuracy in half of the predictions, while the "cheap" class exhibited higher precision at 0.8905. However, precision for the "expensive" class was NaN, indicating a lack of correct positive predictions.
+
+In summary, the decision tree demonstrated good overall accuracy but faced challenges in correctly classifying instances for specific classes, especially "expensive." Specificity, sensitivity, and precision values provided a nuanced understanding of the model's performance for each class, emphasizing the importance of considering these metrics, especially in the context of imbalanced data.
+
+
+### using the ration(c5.0) algorithm:
+
+
+The decision tree model, employing "width" as the root attribute based on the highest gain ratio, demonstrated an accuracy of 85.6%. Despite its overall accuracy, the model exhibited significant limitations in accurately classifying "affordable" and "expensive" phones. Notably, it displayed a low sensitivity of 13.64% for "affordable" phones, misclassifying a substantial portion as "cheap." In contrast, the model performed well in identifying "cheap" phones, with a high sensitivity of 96.30% and precision of 90.10%. However, it completely failed to detect instances in the "expensive" class, misclassifying them predominantly as "affordable." The classifier's lowest average precision suggests challenges in making correct positive predictions across classes. While achieving specificity in identifying instances not belonging to the classes, the model's struggles with sensitivity and precision, particularly for minority classes, indicate areas for improvement and optimization in future iterations.
+
+### using the Gini Index algorithm:
+
+The Gini index-based decision tree exhibited an accuracy of 87.04%, slightly lower than the ID3 tree. Despite this, it achieved a high overall correctness in classifying instances. Notably, it prioritized accuracy for the "cheap" class (Sensitivity: 97.35%, Specificity: 33.33%, Precision: 91.09%), while struggling with the "expensive" (Sensitivity: 20%, Specificity: 99.05%, Precision: 33.33%) and "affordable" (Sensitivity: 13.64%, Specificity: 95.88%, Precision: 27.27%) classes due to dataset imbalance. Despite these challenges, the tree maintained a reasonably high accuracy level.
+
+
+
+### results obtained using 60%-40% partition:
+(the best tree in this partitioning is achived using using the Information gain(ID3) algorithm with an 86.57% accuracy)
+
+### using the Information gain(ID3) algorithm:
+
+The decision tree, utilizing "Width" as the root splitting attribute, demonstrated an 86.57% accuracy. However, it faced challenges classifying instances into "expensive" and "affordable" categories, hinting at underrepresentation and imbalances in the dataset, particularly with an abundance of "cheap" instances.
+
+Sensitivity and specificity analyses unveiled strengths and weaknesses. Notably, the model excelled in "cheap" class sensitivity (98.94%) but struggled with specificity (1.85%). For the "affordable" class, it had 0% sensitivity but high specificity (98.71%). Sensitivity for the "expensive" class was 0%, accompanied by 100% specificity.
+
+Precision highlighted limitations, with 0% precision for the "affordable" class and undefined precision for "expensive." Yet, it demonstrated efficacy in predicting "cheap" instances with 87.58% precision.
+
+In summary, the model faced challenges with "affordable" and "expensive" class classifications. While excelling in sensitivity for "cheap," specificity issues emerged. The lack of positive predictions for "expensive" underscores a failure in recognizing positive instances in this class. The findings emphasize the impact of dataset characteristics, including class distribution and imbalance, on model performance and potential bias.
+
+
+
+
+### using the ration(c5.0) algorithm:
+
+
+The decision tree, with "width" as the root like ID3,its based on the highest gain ratio, achieved an overall accuracy of 84% . Notably, the model encountered difficulties in accurately classifying "expensive" and "affordable" phones. For the "affordable" class, it exhibited low sensitivity (18.18%) and precision (23.53%), indicating challenges in correctly identifying and predicting instances. In contrast, the model demonstrated high sensitivity (94.44%) and precision (89.70%) for the "cheap" class , excelling in accurately identifying and predicting instances within this category. However, for the "expensive" class, the model exhibited a complete failure in sensitivity (0.00%), failing to identify any actual expensive phones. The specificity for all classes was relatively high, particularly notable for the "expensive" class. These results emphasize the trade-offs and limitations in the model's performance, with notable challenges in detecting instances in certain classes, particularly "expensive."
+
+### using the Gini Index algorithm:
+
+
+The Gini index-based decision tree achieved an accuracy of 84.26%, lower than the ID3 tree, primarily due to challenges in correctly identifying instances of the "expensive" class. The struggle to accurately classify expensive instances likely contributed to the overall decrease in accuracy, indicating limitations in capturing the complex patterns associated with this class.
+
+The difficulties faced by the decision tree in identifying expensive instances can be attributed to imbalanced data and the chosen partition strategy. Sensitivity (recall) for the "affordable" class was 0.18182, indicating only 18.18% of actual "affordable" instances were correctly classified. Specificity for "affordable" was high at 93.94%, suggesting accurate identification of instances not labeled as "affordable." For the "cheap" class, the model exhibited high sensitivity (94.08%) but lower specificity (24.07%), indicating a higher rate of false positives.
+
+Sensitivity and specificity for the "expensive" class were both 0, indicating the model failed to correctly classify any instances as "expensive" in the dataset. Positive predictive value (precision) was provided for "affordable" (0.22857) and "cheap" (0.8967) classes, reflecting the proportions of correct positive predictions within each class. The higher precision for "cheap" compared to "affordable" suggests greater accuracy in predicting instances labeled as "cheap."
+
+
+### -OVERALL CONCLUSION-
+When comparing the performance of different algorithms and partition ratios, it's clear that the C5.0 algorithm consistently struggles to accurately classify instances as "affordable" or "expensive," even though it performs well in predicting "cheap" instances. In the 70%-30% partition, the C5.0 decision tree demonstrates a good balance in accurately identifying "cheap" phones, with high sensitivity and precision for the "cheap" class (187 out of 189 cheap phones correctly classified). However, it faces challenges in classifying phones as "affordable" or "expensive." Despite efforts like using stratified sampling to address the imbalanced dataset, our goal of building a model that effectively classifies phones into "cheap," "affordable," and "expensive" categories remains unachieved. The imbalance in the data, especially the limited representation of "expensive" instances, contributes to the model's struggles in detecting and predicting instances belonging to the "expensive" class.
+
+
+### load the data after preprocessing to a CVS file
+
+```{r}
+write.csv(dataset_phones, file = "dataset_phones_clustering.csv" ,row.names = FALSE)
+```
+
+### load the processed data
+
+```{r}
+dataset_phones_3 <- read.csv("dataset_phones_clustering.csv" ,header = TRUE,sep=',', stringsAsFactors = T)
+```
+
+##encoding
+
+```{r}
+
+dataset_phones_3$brand=factor(dataset_phones$brand,levels = c("Apple","Google","Honor","Huawei","Lenovo","LG","OnePlus","Oppo","Realme","Samsung","Sony","Vivo","Xiaomi"),labels = c(1,2,3,4,5,6,7,8,9,10,11,12,13))
+dataset_phones_3$os <- factor(dataset_phones_3$os, levels = c("Android 10", "Android 11", "Android12", "Android12L", "Android 13", "Android 6", "Android 7.0", "Android 7.1", "Android 7.1.1", "Android 7.1.2", "Android 8.0", "Android 8.1",  "Android 9.0", "EMUI 12", "EMUI 13", "iOS 14.1", "iOS 15", "iOS 16"), labels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18))
+
+```
+
+We select column that only contains numeric values without the class lable, to ensure that the algorithm operates on a consistent and compatible data representation.
+
+```{r}
+dataset_phones_3$brand <- as.numeric(dataset_phones_3$brand)
+dataset_phones_3$os <- as.numeric(dataset_phones_3$os)
+dataset_phones_3<- dataset_phones_3[, sapply(dataset_phones_3, is.numeric)]
+```
+
+# Check for missing values in dataset_phones_3 and remove it
+
+```{r}
+sum(is.na(dataset_phones_3))
+dataset_phones_3 <- dataset_phones_3[complete.cases(dataset_phones_3), ]
+```
+
+##calculate k-mean
+
+```{r}
+dataset_phones_3 <- scale(dataset_phones_3)
+set.seed(8953)
+ km <- kmeans(dataset_phones_3, 2, iter.max = 140 , algorithm="Lloyd", nstart=100) 
+ km
+#total within-cluster-sum of square
+twss <- sum(km$withinss)
+print(twss)
+
+```
+
+We created the first size k cluster with k-mean algorithm using k=2, we also calculated the total within-cluster-sum of square(TWSS) which in this case equals 14675.21 The goal of the k-means clustering algorithm is to minimize the total within-cluster sum of squares(TWSS) in this case it didn't accomplish the desired goal as the TWSS is so high compared to other clusters with different value k.
+
+```{r}
+install.packages("factoextra")
+library(factoextra)
+
+```
+
+##visualization of cluster
+
+```{r}
+fviz_cluster(list(data = dataset_phones_3, cluster = km$cluster),              ellipse.type = "norm", geom = "point", stand = FALSE,              palette = "jco", ggtheme = theme_classic())
+library(cluster)
+avg_sil <- silhouette(km$cluster,dist(dataset_phones_3))
+fviz_silhouette(avg_sil)
+
+```
+
+From the plot, we are able to determine that certain data points do not belong to any specific cluster, which makes them outliers.
+These outliers indicate something unusual or abnormal in the data.
+As well as, one cluster is noticeably larger than the other.
+
+When we calculate and plot the average silhouette, we see that both cluster's have positive values but the second one has very little negative values in it which indicates that part of the second cluster doesn't fit well within any cluster and may have distinct characteristics or patterns.
+
+It is worth noting that the clusters overlap to some extent, but the overlap is not significant.
+As well as, the distance of cluster points within each cluster is generally small, indicating a high level of compactness within the clusters with one cluster being larger than the other.
+
+The max size for the biggest cluster is 613, while the min size for the smallest cluster is 262, which indicates that the difference is big between values.
+
+##BCubed precision and recall
+
+```{r}
+cluster_assignments <- c(km$cluster)
+ground_truth_labels <- c(dataset_phones$price)
+
+if (length(cluster_assignments) > length(ground_truth_labels)) {
+  cluster_assignments <- cluster_assignments[1:length(ground_truth_labels)]
+} else if (length(cluster_assignments) < length(ground_truth_labels)) {
+  ground_truth_labels <- ground_truth_labels[1:length(cluster_assignments)]
+}
+
+data <- data.frame(cluster = cluster_assignments, label = ground_truth_labels)
+
+# Function to calculate BCubed precision and recall
+calculate_bcubed_metrics <- function(data) {
+  n <- nrow(data)
+  precision_sum <- 0
+  recall_sum <- 0
+
+  for (i in 1:n) {
+    cluster <- data$cluster[i]
+    label <- data$label[i]
+    
+# Count the number of items from the same category within the same cluster
+same_category_same_cluster <- sum(data$label[data$cluster == cluster] == label)
+    
+# Count the total number of items in the same cluster
+total_same_cluster <- sum(data$cluster == cluster)
+    
+# Count the total number of items with the same category
+total_same_category <- sum(data$label == label)
+    
+# Calculate precision and recall for the current item and add them to the sums
+precision_sum <- precision_sum + same_category_same_cluster /total_same_cluster
+recall_sum <- recall_sum + same_category_same_cluster / total_same_category
+  }
+
+  # Calculate average precision and recall
+  precision <- precision_sum / n
+  recall <- recall_sum / n
+
+  return(list(precision = precision, recall = recall))
+}
+
+# Calculate BCubed precision and recall
+metrics <- calculate_bcubed_metrics(data)
+
+# Extract precision and recall from the metrics
+precision <- metrics$precision
+recall <- metrics$recall
+
+# Print the results
+cat("BCubed Precision:", precision, "\n")
+cat("BCubed Recall:", recall, "\n")
+
+```
+
+The BCubed Precision and Recall scores are metrics used to evaluate the performance of clustering algorithms.The BCubed Precision score for two clusters is 0.7962006, indicating that, approximately 79.62% of the instances assigned to the same cluster are actually similar or related to each other.
+This means that the algorithm demonstrates a somewhat high level of precision in correctly identifying similar instances within clusters.
+
+The BCubed Recall score is 0.5821339, which means that around 58.2% of the similar or related instances within each true cluster are correctly assigned to the same cluster.
+This indicates that the algorithm demonstrates a moderate level of recall in capturing instances that are truly related within clusters.
+
+##calculate k-mean
+
+```{r}
+dataset_phones_3 <- scale(dataset_phones_3)
+set.seed(8953)
+ km <- kmeans(dataset_phones_3, 4, iter.max = 140 , algorithm="Lloyd", nstart=100) 
+ km
+#total within-cluster-sum of square
+twss <- sum(km$withinss)
+print(twss)
+```
+
+After applying the k-means algorithm with a cluster value of 4, we created the second size k cluster.
+When calculating the total within-cluster sum of squares (TWSS), we got a value of 11946.32 The objective of the k-means algorithm is to minimize the TWSS.
+In this case, the algorithm did not achieve the desired goal as the TWSS remains relatively high compared to other clusters with different values of k.
+
+##visualization of cluster
+
+```{r}
+fviz_cluster(list(data = dataset_phones_3, cluster = km$cluster),              ellipse.type = "norm", geom = "point", stand = FALSE,              palette = "jco", ggtheme = theme_classic())
+library(cluster)
+avg_sil <- silhouette(km$cluster,dist(dataset_phones_3))
+fviz_silhouette(avg_sil)
+```
+
+From our analysis, we have identified certain data points that cannot be assigned to any specific cluster.
+These data points are considered outliers, indicating potential irregularities or abnormalities.
+Additionally, the clusters exhibit different shapes, suggesting that they vary in size.
+
+After calculating and visualizing the average silhouette, we can see that most of the clusters consist primarily of positive values.
+This implies that these clusters do align well with a particular group, as only 3 clusters contain have some negative values.
+
+We can also see that the clusters in the middle overlap to some extent.
+As well as, the distance of the points within each cluster are generally small, indicating a high level of compactness within the clusters as they are almost the same size excluding one cluster being somewhat bigger than the rest.
+
+The largest cluster has a maximum size of 3363, while the smallest cluster has a minimum size of 101 .
+
+#BCubed precision and recall
+
+```{r}
+cluster_assignments <- c(km$cluster)
+ground_truth_labels <- c(dataset_phones$price)
+
+if (length(cluster_assignments) > length(ground_truth_labels)) {
+  cluster_assignments <- cluster_assignments[1:length(ground_truth_labels)]
+} else if (length(cluster_assignments) < length(ground_truth_labels)) {
+  ground_truth_labels <- ground_truth_labels[1:length(cluster_assignments)]
+}
+
+data <- data.frame(cluster = cluster_assignments, label = ground_truth_labels)
+
+# Function to calculate BCubed precision and recall
+calculate_bcubed_metrics <- function(data) {
+  n <- nrow(data)
+  precision_sum <- 0
+  recall_sum <- 0
+
+  for (i in 1:n) {
+    cluster <- data$cluster[i]
+    label <- data$label[i]
+    
+# Count the number of items from the same category within the same cluster
+same_category_same_cluster <- sum(data$label[data$cluster == cluster] == label)
+    
+# Count the total number of items in the same cluster
+total_same_cluster <- sum(data$cluster == cluster)
+    
+# Count the total number of items with the same category
+total_same_category <- sum(data$label == label)
+    
+# Calculate precision and recall for the current item and add them to the sums
+precision_sum <- precision_sum + same_category_same_cluster /total_same_cluster
+recall_sum <- recall_sum + same_category_same_cluster / total_same_category
+  }
+
+  # Calculate average precision and recall
+  precision <- precision_sum / n
+  recall <- recall_sum / n
+
+  return(list(precision = precision, recall = recall))
+}
+
+# Calculate BCubed precision and recall
+metrics <- calculate_bcubed_metrics(data)
+
+# Extract precision and recall from the metrics
+precision <- metrics$precision
+recall <- metrics$recall
+
+# Print the results
+cat("BCubed Precision:", precision, "\n")
+cat("BCubed Recall:", recall, "\n")
+
+```
+
+According to the BCubed Precision score of 0.8058602 , there is an average of about 80.58% similarity or relatedness between the instances that were assigned to the same cluster.
+This implies that the algorithm shows good levels of accuracy in identifying instances that are similar within clusters.
+Having the highest precision out of the rest of the cluster sizes meaning that it may have better precision in identifying positive instances
+
+On the other hand, the BCubed Recall score of 0.3084003 indicates that, within each genuine cluster, only approximately 30.84% of similar or related instances are correctly allocated to the same cluster on average.
+This suggests that the recall inside clusters is poor.
+
+##calculate k-mean
+
+```{r}
+dataset_phones_3 <- scale(dataset_phones_3)
+set.seed(8953)
+ km <- kmeans(dataset_phones_3, 6, iter.max = 140 , algorithm="Lloyd", nstart=100) 
+ km
+#total within-cluster-sum of square
+twss <- sum(km$withinss)
+print(twss)
+```
+
+By applying the k-means algorithm with a cluster value of 6, we generated the third size k cluster.
+After that, we calculated the total within-cluster sum of squares (TWSS), which has a value of 10290.39 The objective of the k-means algorithm is to minimize the TWSS, and in this case, the algorithm successfully achieved the desired goal since the TWSS is the smallest compared to other clusters with different values of k.
+
+##visualization of cluster
+
+```{r}
+fviz_cluster(list(data = dataset_phones_3, cluster = km$cluster),              ellipse.type = "norm", geom = "point", stand = FALSE,              palette = "jco", ggtheme = theme_classic())
+library(cluster)
+avg_sil <- silhouette(km$cluster,dist(dataset_phones_3))
+fviz_silhouette(avg_sil)
+```
+
+From our analysis, we have identified certain data points that do not belong to any specific cluster, indicating some outliers that may represent unusual or abnormal occurrences.
+Moreover, the varying shapes of the clusters suggest that they are not all of the same size.
+
+After calculating and plotting the average silhouette, we can see that the majority of the clusters have positive values.
+However, there are 4 clusters with some negative values, but with very few values in each of them which indicating that they do not fit well within any cluster and may have distinct characteristics or patterns.
+
+Additionally, there's noticeable variation in distances within the clusters.
+Certain clusters seem to have closely packed data points, indicating a high degree of compactness, while others have more dispersed data points, leading to larger distances between them.
+
+In summary, the clusters are varying in size and display overlap.
+However, there is considerable diversity in the distances within the clusters.
+
+The largest cluster has a maximum size of 325, while the smallest cluster has a minimum size of 2 which is a very small cluster!.
+
+#BCubed precision and recall
+
+```{r}
+cluster_assignments <- c(km$cluster)
+ground_truth_labels <- c(dataset_phones$price)
+
+if (length(cluster_assignments) > length(ground_truth_labels)) {
+  cluster_assignments <- cluster_assignments[1:length(ground_truth_labels)]
+} else if (length(cluster_assignments) < length(ground_truth_labels)) {
+  ground_truth_labels <- ground_truth_labels[1:length(cluster_assignments)]
+}
+
+data <- data.frame(cluster = cluster_assignments, label = ground_truth_labels)
+
+# Function to calculate BCubed precision and recall
+calculate_bcubed_metrics <- function(data) {
+  n <- nrow(data)
+  precision_sum <- 0
+  recall_sum <- 0
+
+  for (i in 1:n) {
+    cluster <- data$cluster[i]
+    label <- data$label[i]
+    
+# Count the number of items from the same category within the same cluster
+same_category_same_cluster <- sum(data$label[data$cluster == cluster] == label)
+    
+# Count the total number of items in the same cluster
+total_same_cluster <- sum(data$cluster == cluster)
+    
+# Count the total number of items with the same category
+total_same_category <- sum(data$label == label)
+    
+# Calculate precision and recall for the current item and add them to the sums
+precision_sum <- precision_sum + same_category_same_cluster /total_same_cluster
+recall_sum <- recall_sum + same_category_same_cluster / total_same_category
+  }
+
+  # Calculate average precision and recall
+  precision <- precision_sum / n
+  recall <- recall_sum / n
+
+  return(list(precision = precision, recall = recall))
+}
+
+# Calculate BCubed precision and recall
+metrics <- calculate_bcubed_metrics(data)
+
+# Extract precision and recall from the metrics
+precision <- metrics$precision
+recall <- metrics$recall
+
+# Print the results
+cat("BCubed Precision:", precision, "\n")
+cat("BCubed Recall:", recall, "\n")
+
+```
+
+Approximately 80.30% of the instances assigned to the same cluster are truly linked or similar to each other, according to the BCubed Precision score of 0.8030733 This implies that the algorithm shows a good degree of accuracy in correctly recognizing instances that are similar within clusters.
+
+However, the average number of comparable or related instances inside each true cluster that is correctly assigned to the same cluster is only 25.96%, as indicated by the BCubed Recall score of 0.259613 This suggests that the recall of actually linked points inside clusters is very poor and the lowest value of recall out of the rest of the cluster sizes.
+
+```{r}
+#fviz_nbclust() with within cluster sums of squares (wss) method
+library(factoextra) 
+fviz_nbclust(dataset_phones_3, kmeans, method = "wss") +
+  geom_vline(xintercept = 4, linetype = 2)+
+  labs(subtitle = "Elbow method")
+```
+
+After reviewing the Elbow method's output from the plot above and comparing all 3 clusters, we may say that 4 clusters are the appropriate and most suitable number of cluster for our data set.
+Even though clusters of k -\> 4 happen to be the clusters with the most overlap, it also happens to be the most fitting in regards to percision and Elbow method output (as seen above in the plot).
+Lastly, because the overlap in k -\> 4 is somewhat considered high and TWSS was the best in k-\> 6 with the heighest value,we can see that our dataset is considered unbalanced, it could mean that clustering isn't the best option for our specific dataset, as unbalanced datasets can result to biased or misleading outcomes.
