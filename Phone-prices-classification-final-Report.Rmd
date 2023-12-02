@@ -2133,7 +2133,7 @@ Sensitivity and specificity for the "expensive" class were both 0, indicating th
 Positive predictive value (precision) was provided for "affordable" (0.22857) and "cheap" (0.8967) classes, reflecting the proportions of correct positive predictions within each class.
 The higher precision for "cheap" compared to "affordable" suggests greater accuracy in predicting instances labeled as "cheap."
 
-### -OVERALL CONCLUSION-
+### -overall conclusion on classification models-
 
 When comparing the performance of different algorithms and partition ratios, it's clear that the C5.0 algorithm consistently struggles to accurately classify instances as "affordable" or "expensive," even though it performs well in predicting "cheap" instances.
 In the 70%-30% partition, the C5.0 decision tree demonstrates a good balance in accurately identifying "cheap" phones, with high sensitivity and precision for the "cheap" class (187 out of 189 cheap phones correctly classified).
@@ -2163,6 +2163,9 @@ It's important to remember that some overlap is OK as long as it doesn't impair 
 
 Our dataset may be imbalanced, causing potential bias or misleading results when used for clustering, which required careful evaluation of its outcomes.
 In conclusion, there was some disagreement between k=4 and k=6 after all calculations had been performed, but this was resolved when we compared all of the results above and it was determined that 4 clusters were the most appropriate and acceptable choice for our specific dataset, to ensure reliable and relevant results.
+
+### comparing classification and clustering
+both models, supervised learning models (classification) and unsupervised learning models (clustering), offer valuable contributions to predicting the price category of a phone. However, when considering datasets that encompass a class label, such as "price," supervised learning models emerge as the more suitable and accurate choice to apply.
 
 ### Reference:
 [1]“Phone Prices,” www.kaggle.com. https://www.kaggle.com/datasets/berkayeserr/phone-prices (accessed Dec. 02, 2023).
