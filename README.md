@@ -1,4 +1,4 @@
-# data-mining-G3
+# Phone Prices Classification model | Data mining project
 Phone prices analysis
 
 Shdan Alsheddi - Juri Alsolaimi - Shaden Albader- Joud Alhussain
